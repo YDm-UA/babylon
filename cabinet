@@ -1,91 +1,73 @@
-//https://playground.babylonjs.com/#W8EW5F
+// https://playground.babylonjs.com/#YIU90M#470
 
 
 var delayCreateScene = function () {
-    
-    var scene = new BABYLON.Scene(engine);  
-
-    BABYLON.SceneLoader.ImportMesh(
-        "",
-        "https://raw.githubusercontent.com/YDm-UA/babylon/main/",
-        "cabinet.babylon",
-        scene,
-        function (meshes) {          
-    
-    var multimat = new BABYLON.MultiMaterial('multi', scene);
-    multimat.subMaterials.push(scene.getMaterialByName("Timber"));
-    multimat.subMaterials.push(scene.getMaterialByName("Black"));
-
-                      var Carcass = scene.getMeshByName("Carcass");
-                  Carcass.name="Carcass";
-                  Carcass.id="Carcass";
-
-                  var Drawer_Front = scene.getMeshByName("Drawer_primitive0");
-                  var Drawer_Box = scene.getMeshByName("Drawer_primitive1");
-                  
-                  var Drawer = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("Drawer_primitive0"), scene.getMeshByName("Drawer_primitive1")], true, true, undefined, true);      
-                  Drawer.name='Drawer';
-                  Drawer.id='Drawer';
-                  Drawer.parent=Carcass;
-                  Drawer.position.y=-50;
-                  Drawer.material = multimat;
-                  Drawer.subMeshes[1].materialIndex = 1;
-                  Drawer.actionManager = new BABYLON.ActionManager(scene);
-                  Drawer.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev)
-                  {
-                      
-                  }));
-                Drawer.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev)
-                  {
-                      
-                  }));
-
-
-
-            scene.createDefaultCameraOrLight(true, true, true);
-            scene.createDefaultEnvironment();
-            
-    });
-
-
-
-    var startPosition = new BABYLON.Vector3(0, -50, 0);
-    var endPosition = new BABYLON.Vector3(0, -50, 500);
-
-   
-
-
-
-        scene.onPointerPick = function(evt, pickInfo) {
-            if(pickInfo.hit) {
-                if (pickInfo.pickedMesh != null){
-if (pickInfo.pickedMesh.name=="Carcass")
-{
-    console.log("Carcass++");                    
-};
-if (pickInfo.pickedMesh.name=="Drawer")
-{
-    console.log("Drawer++");
-console.log(scene.getMeshByName(pickInfo.pickedMesh.name).position.z);
-
-
-if (scene.getMeshByName(pickInfo.pickedMesh.name).position.z==0)
-{
-    BABYLON.Animation.CreateAndStartAnimation("anim", scene.getMeshByName("Drawer"), "position", 30, 30, startPosition, endPosition, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-
-}
-else
-{
-    BABYLON.Animation.CreateAndStartAnimation("anim", scene.getMeshByName("Drawer"), "position", 30, 30, endPosition, startPosition, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-}
-
-};
-
-
-                }
-            }
-       }
-
-
-    return scene;
+	var scene = new BABYLON.Scene(engine);
+	BABYLON.SceneLoader.ImportMesh(
+	"",
+	"https://raw.githubusercontent.com/YDm-UA/babylon/main/",
+	"cabinet.glb",
+	scene,
+	function (meshes) {
+		var multimat = new BABYLON.MultiMaterial('multi', scene);
+		multimat.subMaterials.push(scene.getMaterialByName("Timber"));
+		multimat.subMaterials.push(scene.getMaterialByName("Black"));
+			var Carcass = scene.getMeshByName("Carcass");
+			Carcass.name="Carcass";
+			Carcass.id="Carcass";
+			
+			var Drawer_Front = scene.getMeshByName("Drawer_primitive0");
+			var Drawer_Box = scene.getMeshByName("Drawer_primitive1");
+			
+			var Drawer = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("Drawer_primitive0"), scene.getMeshByName("Drawer_primitive1")], true, true, undefined, true);
+			Drawer.name='Drawer';
+			Drawer.id='Drawer';
+			Drawer.parent=Carcass;
+			Drawer.position.y=-50;
+			Drawer.position.x=900;
+			Drawer.material = multimat;
+			Drawer.subMeshes[1].materialIndex = 1;
+			
+			Drawer.actionManager = new BABYLON.ActionManager(scene);
+			Drawer.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function(ev)
+				{
+					
+				}));
+			Drawer.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOutTrigger, function(ev)
+				{
+					
+				}));
+			
+			scene.createDefaultCameraOrLight(true, true, true);
+			scene.createDefaultEnvironment();
+			});
+			
+			var startPosition = new BABYLON.Vector3(900, -50, 0);
+			var endPosition = new BABYLON.Vector3(900, -50, 500);
+			
+			scene.onPointerPick = function(evt, pickInfo)
+			{
+				if(pickInfo.hit)
+				{
+					if (pickInfo.pickedMesh != null)
+					{
+						if (pickInfo.pickedMesh.name=="Carcass")
+						{
+							
+						};
+						if (pickInfo.pickedMesh.name=="Drawer")
+						{
+							if (scene.getMeshByName(pickInfo.pickedMesh.name).position.z==0)
+							{
+								BABYLON.Animation.CreateAndStartAnimation("anim", scene.getMeshByName("Drawer"), "position", 30, 30, startPosition, endPosition, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+							}
+							else
+							{
+								BABYLON.Animation.CreateAndStartAnimation("anim", scene.getMeshByName("Drawer"), "position", 30, 30, endPosition, startPosition, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+							}
+						};
+					}
+				}
+			}
+	return scene;
 };
