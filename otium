@@ -1,0 +1,182 @@
+//https://playground.babylonjs.com/#0ENGTN#4
+var createScene = function () {
+
+    var scene = new BABYLON.Scene(engine);
+
+    // The first parameter can be used to specify which mesh to import. Here we import all meshes
+
+    BABYLON.SceneLoader.Append("https://raw.githubusercontent.com/YDm-UA/babylon/main/", "otium.glb", scene, function (newMeshes) {
+
+        var SceneMat = new BABYLON.MultiMaterial('SceneMat', scene);
+        SceneMat.subMaterials.push(scene.getMaterialByName("Black"));           // 0
+        SceneMat.subMaterials.push(scene.getMaterialByName("Blue"));            // 1
+        SceneMat.subMaterials.push(scene.getMaterialByName("Blue.001"));        // 2
+        SceneMat.subMaterials.push(scene.getMaterialByName("Chocolate"));       // 3
+        SceneMat.subMaterials.push(scene.getMaterialByName("Floor"));           // 4
+        SceneMat.subMaterials.push(scene.getMaterialByName("Glass_Brown"));     // 5
+        SceneMat.subMaterials.push(scene.getMaterialByName("Grey"));            // 6
+        SceneMat.subMaterials.push(scene.getMaterialByName("Grey.001"));        // 7
+        SceneMat.subMaterials.push(scene.getMaterialByName("White"));           // 8
+        SceneMat.subMaterials.push(scene.getMaterialByName("Yellow"));          // 9
+        SceneMat.subMaterials.push(scene.getMaterialByName("Yellow.001"));      // 10
+
+        scene.createDefaultCameraOrLight(true);
+
+        scene.activeCamera.attachControl(canvas, false);
+
+        scene.activeCamera.alpha += Math.PI; // camera +180°
+
+        var B_FD_Room = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("FD_Room_primitive0"), scene.getMeshByName("FD_Room_primitive1"), scene.getMeshByName("FD_Room_primitive2"), scene.getMeshByName("FD_Room_primitive3"), scene.getMeshByName("FD_Room_primitive4")], true, true, undefined, true);
+        B_FD_Room.material = SceneMat;
+        B_FD_Room.subMeshes[0].materialIndex = 4;
+        B_FD_Room.subMeshes[1].materialIndex = 8;
+        B_FD_Room.subMeshes[2].materialIndex = 6;
+        B_FD_Room.subMeshes[3].materialIndex = 1;
+        B_FD_Room.subMeshes[4].materialIndex = 9;        
+        B_FD_Room.name = B_FD_Room;
+        B_FD_Room.id = B_FD_Room;
+        //B_FD_Room.showBoundingBox=true;
+      
+        var B_FD_Left_Door = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("FD_Left_Door_primitive0"), scene.getMeshByName("FD_Left_Door_primitive1"), scene.getMeshByName("FD_Left_Door_primitive2")], true, true, undefined, true);
+        B_FD_Left_Door.material = SceneMat;
+        B_FD_Left_Door.subMeshes[0].materialIndex = 0; //0
+        B_FD_Left_Door.subMeshes[1].materialIndex = 3; //3
+        B_FD_Left_Door.subMeshes[2].materialIndex = 5; //5
+        B_FD_Left_Door.name = B_FD_Left_Door;
+        B_FD_Left_Door.id = B_FD_Left_Door;
+        
+        
+        var B_FD_Left_Door_StartPos = new BABYLON.Vector3(0, 0, 0);
+        var B_FD_Left_Door_EndPos = new BABYLON.Vector3(-1.15, 0, 0);
+
+        B_FD_Left_Door.actionManager = new BABYLON.ActionManager(scene);
+        //B_FD_Left_Door.actionManager.isRecursive = true;
+        B_FD_Left_Door.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function (ev) {
+            
+            if (B_FD_Left_Door.position.x==0)
+            {
+			BABYLON.Animation.CreateAndStartAnimation("FD_Left_Door_anim", B_FD_Left_Door, "position", 30, 30, B_FD_Left_Door_StartPos, B_FD_Left_Door_EndPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+            BABYLON.Animation.CreateAndStartAnimation("FD_Left_Door_anim", B_FD_Left_Door, "position", 30, 30, B_FD_Left_Door_EndPos, B_FD_Left_Door_StartPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);                
+            }
+
+        }));
+        
+        var B_FD_Right_Door = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("FD_Right_Door_primitive0"), scene.getMeshByName("FD_Right_Door_primitive1"), scene.getMeshByName("FD_Right_Door_primitive2")], true, true, undefined, true);
+        B_FD_Right_Door.material = SceneMat;
+        B_FD_Right_Door.subMeshes[0].materialIndex = 0; //0
+        B_FD_Right_Door.subMeshes[1].materialIndex = 3; //3
+        B_FD_Right_Door.subMeshes[2].materialIndex = 5; //5
+        B_FD_Right_Door.name = B_FD_Right_Door;
+        B_FD_Right_Door.id = B_FD_Right_Door;
+        var B_FD_Right_Door_StartPos = new BABYLON.Vector3(0, 0, 0);
+        var B_FD_Right_Door_EndPos = new BABYLON.Vector3(1.15, 0, 0);
+
+        B_FD_Right_Door.actionManager = new BABYLON.ActionManager(scene);
+        B_FD_Right_Door.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function (ev) {
+            
+            if (B_FD_Right_Door.position.x==0)
+            {
+			BABYLON.Animation.CreateAndStartAnimation("FD_Right_Door_anim", B_FD_Right_Door, "position", 30, 30, B_FD_Right_Door_StartPos, B_FD_Right_Door_EndPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+            BABYLON.Animation.CreateAndStartAnimation("FD_Right_Door_anim", B_FD_Right_Door, "position", 30, 30, B_FD_Right_Door_EndPos, B_FD_Right_Door_StartPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);                
+            }
+        }));
+
+        var B_FD_Slide_Track = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("FD_Slide_Track")], true, true, undefined, true);
+        B_FD_Slide_Track.material= SceneMat;
+        B_FD_Slide_Track.subMeshes[0].materialIndex=0;
+        B_FD_Slide_Track.name=B_FD_Slide_Track;
+        B_FD_Slide_Track.id=B_FD_Slide_Track;
+               
+//---
+
+        var B_PD_Room =  BABYLON.Mesh.MergeMeshes([scene.getMeshByName("PD_Room_primitive0"),scene.getMeshByName("PD_Room_primitive1"),scene.getMeshByName("PD_Room_primitive2"),scene.getMeshByName("PD_Room_primitive3"),scene.getMeshByName("PD_Room_primitive4")], true, true, undefined, true);
+        B_PD_Room.material=SceneMat;
+        B_PD_Room.subMeshes[0].materialIndex=6;
+        B_PD_Room.subMeshes[1].materialIndex=4;
+        B_PD_Room.subMeshes[2].materialIndex=8;
+        B_PD_Room.subMeshes[3].materialIndex=1;
+        B_PD_Room.subMeshes[4].materialIndex=9;
+        B_PD_Room.name=B_PD_Room;
+        B_PD_Room.id=B_PD_Room;
+        //B_PD_Room.showBoundingBox=true;
+
+        var B_PD_Left_Door = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("PD_Right_Door_primitive0"), scene.getMeshByName("PD_Right_Door_primitive1"), scene.getMeshByName("PD_Right_Door_primitive2")], true, true, undefined, true);
+        B_PD_Left_Door.material = SceneMat;
+        B_PD_Left_Door.subMeshes[0].materialIndex = 0; //0
+        B_PD_Left_Door.subMeshes[1].materialIndex = 3; //3
+        B_PD_Left_Door.subMeshes[2].materialIndex = 5; //5
+        B_PD_Left_Door.name = B_PD_Left_Door;
+        B_PD_Left_Door.id = B_PD_Left_Door;
+        //B_PD_Left_Door.showBoundingBox=true;
+
+        var B_PD_Left_Door_StartPos = new BABYLON.Vector3(0, 0, 0);
+        var B_PD_Left_Door_EndPos = new BABYLON.Vector3(1.2, 0, 0);
+        
+        B_PD_Left_Door.actionManager = new BABYLON.ActionManager(scene);
+        //B_PD_Left_Door.actionManager.isRecursive = true;
+        B_PD_Left_Door.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function (ev) {
+            
+            if (B_PD_Left_Door.position.x==0)
+            {
+			BABYLON.Animation.CreateAndStartAnimation("PD_Left_Door_anim", B_PD_Left_Door, "position", 30, 30, B_PD_Left_Door_StartPos, B_PD_Left_Door_EndPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+            BABYLON.Animation.CreateAndStartAnimation("PD_Left_Door_anim", B_PD_Left_Door, "position", 30, 30, B_PD_Left_Door_EndPos, B_PD_Left_Door_StartPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);                
+            }
+
+        }));
+
+
+        var B_PD_Right_Door = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("PD_Left_Door_primitive0"), scene.getMeshByName("PD_Left_Door_primitive1"), scene.getMeshByName("PD_Left_Door_primitive2")], true, true, undefined, true);
+        B_PD_Right_Door.material = SceneMat;
+        B_PD_Right_Door.subMeshes[0].materialIndex = 0; //0
+        B_PD_Right_Door.subMeshes[1].materialIndex = 3; //3
+        B_PD_Right_Door.subMeshes[2].materialIndex = 5; //5
+        B_PD_Right_Door.name = B_PD_Right_Door;
+        B_PD_Right_Door.id = B_PD_Right_Door;
+       
+        var B_PD_Right_Door_StartPos = new BABYLON.Vector3(0, 0, 0);
+        var B_PD_Right_Door_EndPos = new BABYLON.Vector3(-1.2, 0, 0);
+
+        B_PD_Right_Door.actionManager = new BABYLON.ActionManager(scene);
+        //B_PD_Right_Door.actionManager.isRecursive = true;
+        B_PD_Right_Door.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function (ev) {
+            
+            if (B_PD_Right_Door.position.x==0)
+            {
+			BABYLON.Animation.CreateAndStartAnimation("PD_Left_Door_anim", B_PD_Right_Door, "position", 30, 30, B_PD_Right_Door_StartPos, B_PD_Right_Door_EndPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+            BABYLON.Animation.CreateAndStartAnimation("PD_Left_Door_anim", B_PD_Right_Door, "position", 30, 30, B_PD_Right_Door_EndPos, B_PD_Right_Door_StartPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);                
+            }
+
+        }));
+
+
+
+
+    });
+
+
+
+    scene.onPointerPick = function (evt, pickInfo) {
+        if (pickInfo.hit) {
+            if (pickInfo.pickedMesh != null) {
+                console.log(pickInfo.pickedMesh.name);
+
+
+            }
+        }
+    }
+
+
+    return scene;
+}
