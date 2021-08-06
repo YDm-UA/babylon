@@ -1,13 +1,26 @@
-//https://playground.babylonjs.com/#0ENGTN#4
+//https://playground.babylonjs.com/#0ENGTN#11
+
 var createScene = function () {
 
     var scene = new BABYLON.Scene(engine);
+	var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
+    camera.setPosition(new BABYLON.Vector3(-11, 11, -11));
+	camera.attachControl(canvas, false);
+
+    var FDSPos= new BABYLON.Vector3(0, 0, 0);
+    var FDLEPos= new BABYLON.Vector3(1.15, 0, 0);
+    var FDREPos= new BABYLON.Vector3(-1.15, 0, 0);
+    var PDLEPos= new BABYLON.Vector3(1.18, 0, 0);
+    var PDREPos= new BABYLON.Vector3(-1.18, 0, 0);
 
     // The first parameter can be used to specify which mesh to import. Here we import all meshes
 
     BABYLON.SceneLoader.Append("https://raw.githubusercontent.com/YDm-UA/babylon/main/", "otium.glb", scene, function (newMeshes) {
 
-        var SceneMat = new BABYLON.MultiMaterial('SceneMat', scene);
+
+
+//scene materials
+    var SceneMat = new BABYLON.MultiMaterial('SceneMat', scene);
         SceneMat.subMaterials.push(scene.getMaterialByName("Black"));           // 0
         SceneMat.subMaterials.push(scene.getMaterialByName("Blue"));            // 1
         SceneMat.subMaterials.push(scene.getMaterialByName("Blue.001"));        // 2
@@ -20,159 +33,128 @@ var createScene = function () {
         SceneMat.subMaterials.push(scene.getMaterialByName("Yellow"));          // 9
         SceneMat.subMaterials.push(scene.getMaterialByName("Yellow.001"));      // 10
 
+//scene camera and light
         scene.createDefaultCameraOrLight(true);
-
         scene.activeCamera.attachControl(canvas, false);
+        scene.activeCamera.alpha += 0.1+Math.PI; // camera +180°
 
-        scene.activeCamera.alpha += Math.PI; // camera +180°
+//FD Room
+    var FDRoom = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("FDRm_primitive0"), scene.getMeshByName("FDRm_primitive1"), scene.getMeshByName("FDRm_primitive2"), scene.getMeshByName("FDRm_primitive3"), scene.getMeshByName("FDRm_primitive4"),scene.getMeshByName("FDTr")], true, true, undefined, false, true);
+        FDRoom.material = SceneMat;
+        FDRoom.subMeshes[0].materialIndex = 4;
+        FDRoom.subMeshes[1].materialIndex = 8;
+        FDRoom.subMeshes[2].materialIndex = 6;
+        FDRoom.subMeshes[3].materialIndex = 1;
+        FDRoom.subMeshes[4].materialIndex = 9;
+        FDRoom.subMeshes[5].materialIndex = 0;
+        FDRoom.name = FDRoom.id = "FDRoom";
+        //FDRoom.showBoundingBox=true;
 
-        var B_FD_Room = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("FD_Room_primitive0"), scene.getMeshByName("FD_Room_primitive1"), scene.getMeshByName("FD_Room_primitive2"), scene.getMeshByName("FD_Room_primitive3"), scene.getMeshByName("FD_Room_primitive4")], true, true, undefined, true);
-        B_FD_Room.material = SceneMat;
-        B_FD_Room.subMeshes[0].materialIndex = 4;
-        B_FD_Room.subMeshes[1].materialIndex = 8;
-        B_FD_Room.subMeshes[2].materialIndex = 6;
-        B_FD_Room.subMeshes[3].materialIndex = 1;
-        B_FD_Room.subMeshes[4].materialIndex = 9;        
-        B_FD_Room.name = B_FD_Room;
-        B_FD_Room.id = B_FD_Room;
-        //B_FD_Room.showBoundingBox=true;
-      
-        var B_FD_Left_Door = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("FD_Left_Door_primitive0"), scene.getMeshByName("FD_Left_Door_primitive1"), scene.getMeshByName("FD_Left_Door_primitive2")], true, true, undefined, true);
-        B_FD_Left_Door.material = SceneMat;
-        B_FD_Left_Door.subMeshes[0].materialIndex = 0; //0
-        B_FD_Left_Door.subMeshes[1].materialIndex = 3; //3
-        B_FD_Left_Door.subMeshes[2].materialIndex = 5; //5
-        B_FD_Left_Door.name = B_FD_Left_Door;
-        B_FD_Left_Door.id = B_FD_Left_Door;
-        
-        
-        var B_FD_Left_Door_StartPos = new BABYLON.Vector3(0, 0, 0);
-        var B_FD_Left_Door_EndPos = new BABYLON.Vector3(-1.15, 0, 0);
+//FD Room Left Door
+    var FDLDoor = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("FDLD_primitive0"), scene.getMeshByName("FDLD_primitive1"), scene.getMeshByName("FDLD_primitive2")], true, true, undefined, false, true);
+        FDLDoor.material=SceneMat;
+        FDLDoor.subMeshes[0].materialIndex=0;
+        FDLDoor.subMeshes[1].materialIndex=3;
+        FDLDoor.subMeshes[2].materialIndex=5;
+        FDLDoor.name = FDLDoor.id = "FDLDoor";
+        //FDLDoor.showBoundingBox=true;
 
-        B_FD_Left_Door.actionManager = new BABYLON.ActionManager(scene);
-        //B_FD_Left_Door.actionManager.isRecursive = true;
-        B_FD_Left_Door.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function (ev) {
-            
-            if (B_FD_Left_Door.position.x==0)
-            {
-			BABYLON.Animation.CreateAndStartAnimation("FD_Left_Door_anim", B_FD_Left_Door, "position", 30, 30, B_FD_Left_Door_StartPos, B_FD_Left_Door_EndPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-            }
-            else
-            {
-            BABYLON.Animation.CreateAndStartAnimation("FD_Left_Door_anim", B_FD_Left_Door, "position", 30, 30, B_FD_Left_Door_EndPos, B_FD_Left_Door_StartPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);                
-            }
-
-        }));
-        
-        var B_FD_Right_Door = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("FD_Right_Door_primitive0"), scene.getMeshByName("FD_Right_Door_primitive1"), scene.getMeshByName("FD_Right_Door_primitive2")], true, true, undefined, true);
-        B_FD_Right_Door.material = SceneMat;
-        B_FD_Right_Door.subMeshes[0].materialIndex = 0; //0
-        B_FD_Right_Door.subMeshes[1].materialIndex = 3; //3
-        B_FD_Right_Door.subMeshes[2].materialIndex = 5; //5
-        B_FD_Right_Door.name = B_FD_Right_Door;
-        B_FD_Right_Door.id = B_FD_Right_Door;
-        var B_FD_Right_Door_StartPos = new BABYLON.Vector3(0, 0, 0);
-        var B_FD_Right_Door_EndPos = new BABYLON.Vector3(1.15, 0, 0);
-
-        B_FD_Right_Door.actionManager = new BABYLON.ActionManager(scene);
-        B_FD_Right_Door.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function (ev) {
-            
-            if (B_FD_Right_Door.position.x==0)
-            {
-			BABYLON.Animation.CreateAndStartAnimation("FD_Right_Door_anim", B_FD_Right_Door, "position", 30, 30, B_FD_Right_Door_StartPos, B_FD_Right_Door_EndPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-            }
-            else
-            {
-            BABYLON.Animation.CreateAndStartAnimation("FD_Right_Door_anim", B_FD_Right_Door, "position", 30, 30, B_FD_Right_Door_EndPos, B_FD_Right_Door_StartPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);                
-            }
-        }));
-
-        var B_FD_Slide_Track = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("FD_Slide_Track")], true, true, undefined, true);
-        B_FD_Slide_Track.material= SceneMat;
-        B_FD_Slide_Track.subMeshes[0].materialIndex=0;
-        B_FD_Slide_Track.name=B_FD_Slide_Track;
-        B_FD_Slide_Track.id=B_FD_Slide_Track;
-               
-//---
-
-        var B_PD_Room =  BABYLON.Mesh.MergeMeshes([scene.getMeshByName("PD_Room_primitive0"),scene.getMeshByName("PD_Room_primitive1"),scene.getMeshByName("PD_Room_primitive2"),scene.getMeshByName("PD_Room_primitive3"),scene.getMeshByName("PD_Room_primitive4")], true, true, undefined, true);
-        B_PD_Room.material=SceneMat;
-        B_PD_Room.subMeshes[0].materialIndex=6;
-        B_PD_Room.subMeshes[1].materialIndex=4;
-        B_PD_Room.subMeshes[2].materialIndex=8;
-        B_PD_Room.subMeshes[3].materialIndex=1;
-        B_PD_Room.subMeshes[4].materialIndex=9;
-        B_PD_Room.name=B_PD_Room;
-        B_PD_Room.id=B_PD_Room;
-        //B_PD_Room.showBoundingBox=true;
-
-        var B_PD_Left_Door = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("PD_Right_Door_primitive0"), scene.getMeshByName("PD_Right_Door_primitive1"), scene.getMeshByName("PD_Right_Door_primitive2")], true, true, undefined, true);
-        B_PD_Left_Door.material = SceneMat;
-        B_PD_Left_Door.subMeshes[0].materialIndex = 0; //0
-        B_PD_Left_Door.subMeshes[1].materialIndex = 3; //3
-        B_PD_Left_Door.subMeshes[2].materialIndex = 5; //5
-        B_PD_Left_Door.name = B_PD_Left_Door;
-        B_PD_Left_Door.id = B_PD_Left_Door;
-        //B_PD_Left_Door.showBoundingBox=true;
-
-        var B_PD_Left_Door_StartPos = new BABYLON.Vector3(0, 0, 0);
-        var B_PD_Left_Door_EndPos = new BABYLON.Vector3(1.2, 0, 0);
-        
-        B_PD_Left_Door.actionManager = new BABYLON.ActionManager(scene);
-        //B_PD_Left_Door.actionManager.isRecursive = true;
-        B_PD_Left_Door.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function (ev) {
-            
-            if (B_PD_Left_Door.position.x==0)
-            {
-			BABYLON.Animation.CreateAndStartAnimation("PD_Left_Door_anim", B_PD_Left_Door, "position", 30, 30, B_PD_Left_Door_StartPos, B_PD_Left_Door_EndPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-            }
-            else
-            {
-            BABYLON.Animation.CreateAndStartAnimation("PD_Left_Door_anim", B_PD_Left_Door, "position", 30, 30, B_PD_Left_Door_EndPos, B_PD_Left_Door_StartPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);                
-            }
-
-        }));
+//FD Room Right Door
+    var FDRDoor = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("FDRD_primitive0"), scene.getMeshByName("FDRD_primitive1"), scene.getMeshByName("FDRD_primitive2")], true, true, undefined, false, true);
+        FDRDoor.material=SceneMat;
+        FDRDoor.subMeshes[0].materialIndex=0;
+        FDRDoor.subMeshes[1].materialIndex=3;
+        FDRDoor.subMeshes[2].materialIndex=5;
+        FDRDoor.name = FDLDoor.id = "FDRDoor";
+        //FDRDoor.showBoundingBox=true;    
 
 
-        var B_PD_Right_Door = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("PD_Left_Door_primitive0"), scene.getMeshByName("PD_Left_Door_primitive1"), scene.getMeshByName("PD_Left_Door_primitive2")], true, true, undefined, true);
-        B_PD_Right_Door.material = SceneMat;
-        B_PD_Right_Door.subMeshes[0].materialIndex = 0; //0
-        B_PD_Right_Door.subMeshes[1].materialIndex = 3; //3
-        B_PD_Right_Door.subMeshes[2].materialIndex = 5; //5
-        B_PD_Right_Door.name = B_PD_Right_Door;
-        B_PD_Right_Door.id = B_PD_Right_Door;
-       
-        var B_PD_Right_Door_StartPos = new BABYLON.Vector3(0, 0, 0);
-        var B_PD_Right_Door_EndPos = new BABYLON.Vector3(-1.2, 0, 0);
+//PD Room
+    var PDRoom = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("PDRm_primitive0"), scene.getMeshByName("PDRm_primitive1"), scene.getMeshByName("PDRm_primitive2"), scene.getMeshByName("PDRm_primitive3"), scene.getMeshByName("PDRm_primitive4"),scene.getMeshByName("PDTr")], true, true, undefined, false, true);
+        PDRoom.material = SceneMat;
+        PDRoom.subMeshes[0].materialIndex = 6;
+        PDRoom.subMeshes[1].materialIndex = 4;
+        PDRoom.subMeshes[2].materialIndex = 8;
+        PDRoom.subMeshes[3].materialIndex = 1;
+        PDRoom.subMeshes[4].materialIndex = 9;
+        PDRoom.subMeshes[5].materialIndex = 0;
+        PDRoom.name = PDRoom.id = "PDRoom";
+        //PDRoom.showBoundingBox=true;
 
-        B_PD_Right_Door.actionManager = new BABYLON.ActionManager(scene);
-        //B_PD_Right_Door.actionManager.isRecursive = true;
-        B_PD_Right_Door.actionManager.registerAction(new BABYLON.ExecuteCodeAction(BABYLON.ActionManager.OnPointerOverTrigger, function (ev) {
-            
-            if (B_PD_Right_Door.position.x==0)
-            {
-			BABYLON.Animation.CreateAndStartAnimation("PD_Left_Door_anim", B_PD_Right_Door, "position", 30, 30, B_PD_Right_Door_StartPos, B_PD_Right_Door_EndPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-            }
-            else
-            {
-            BABYLON.Animation.CreateAndStartAnimation("PD_Left_Door_anim", B_PD_Right_Door, "position", 30, 30, B_PD_Right_Door_EndPos, B_PD_Right_Door_StartPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);                
-            }
+//PD Room Left Door
+    var PDLDoor = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("PDLD_primitive0"), scene.getMeshByName("PDLD_primitive1"), scene.getMeshByName("PDLD_primitive2")], true, true, undefined, false, true);
+        PDLDoor.material=SceneMat;
+        PDLDoor.subMeshes[0].materialIndex=0;
+        PDLDoor.subMeshes[1].materialIndex=3;
+        PDLDoor.subMeshes[2].materialIndex=5;
+        PDLDoor.name = PDLDoor.id = "PDLDoor";
+        //PDLDoor.showBoundingBox=true;
 
-        }));
-
-
-
+//PD Room Right Door
+    var PDRDoor = BABYLON.Mesh.MergeMeshes([scene.getMeshByName("PDRD_primitive0"), scene.getMeshByName("PDRD_primitive1"), scene.getMeshByName("PDRD_primitive2")], true, true, undefined, false, true);
+        PDRDoor.material=SceneMat;
+        PDRDoor.subMeshes[0].materialIndex=0;
+        PDRDoor.subMeshes[1].materialIndex=3;
+        PDRDoor.subMeshes[2].materialIndex=5;
+        PDRDoor.name = PDLDoor.id = "PDRDoor";
+        //PDRDoor.showBoundingBox=true;    
 
     });
 
-
-
     scene.onPointerPick = function (evt, pickInfo) {
         if (pickInfo.hit) {
-            if (pickInfo.pickedMesh != null) {
+            if (pickInfo.pickedMesh != null)
+            {
                 console.log(pickInfo.pickedMesh.name);
+                    // FD Left Door Animation
+                    if (pickInfo.pickedMesh.name=="FDLDoor")
+                    {
+                        if (pickInfo.pickedMesh.position.x==0)
+                        {
+                            BABYLON.Animation.CreateAndStartAnimation("FDLDoor_Open_Anim", pickInfo.pickedMesh, "position", 30, 30, FDSPos, FDLEPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                        }
+                        else
+                        {
+                            BABYLON.Animation.CreateAndStartAnimation("FDLDoor_Close_Anim", pickInfo.pickedMesh, "position", 30, 30, FDLEPos, FDSPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                        }
+                    }
+                    // FD Right Door Animation
+                    if (pickInfo.pickedMesh.name=="FDRDoor")
+                    {
+                        if (pickInfo.pickedMesh.position.x==0)
+                        {
+                            BABYLON.Animation.CreateAndStartAnimation("FDRDoor_Open_Anim", pickInfo.pickedMesh, "position", 30, 30, FDSPos, FDREPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                        }
+                        else
+                        {
+                            BABYLON.Animation.CreateAndStartAnimation("FDRDoor_Close_Anim", pickInfo.pickedMesh, "position", 30, 30, FDREPos, FDSPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                        }
+                    }
 
-
+                    // PD Left Door Animation
+                    if (pickInfo.pickedMesh.name=="PDLDoor")
+                    {
+                        if (pickInfo.pickedMesh.position.x==0)
+                        {
+                            BABYLON.Animation.CreateAndStartAnimation("PDLDoor_Open_Anim", pickInfo.pickedMesh, "position", 30, 30, FDSPos, PDLEPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                        }
+                        else
+                        {
+                            BABYLON.Animation.CreateAndStartAnimation("PDLDoor_Close_Anim", pickInfo.pickedMesh, "position", 30, 30, PDLEPos, FDSPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                        }
+                    }
+                    // PD Right Door Animation
+                    if (pickInfo.pickedMesh.name=="PDRDoor")
+                    {
+                        if (pickInfo.pickedMesh.position.x==0)
+                        {
+                            BABYLON.Animation.CreateAndStartAnimation("PDRDoor_Open_Anim", pickInfo.pickedMesh, "position", 30, 30, FDSPos, PDREPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                        }
+                        else
+                        {
+                            BABYLON.Animation.CreateAndStartAnimation("PDRDoor_Close_Anim", pickInfo.pickedMesh, "position", 30, 30, PDREPos, FDSPos, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                        }
+                    }
             }
         }
     }
