@@ -1,12 +1,30 @@
-//https://playground.babylonjs.com/#22J0X5
+//https://playground.babylonjs.com/#22J0X5#1
 var createScene = function () {
 
     var scene = new BABYLON.Scene(engine);
 	var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
-    var DoorOpend=1.8326; //105°
-    var DoorClosed=0;
+    var Door_Opend=1.8326; //105°
+    var Door_Closed=0;
     var Drawer_Opened=450;
     var Drawer_Closed=0;
+    var A1_LDS=0;   //A1 Left Door State
+    var A1_RDS=0;   //A1 Right Door State
+    var A1_TDS=0;   //A1 Top Drawer State
+    var A1_BDS=0;   //A1 Bottom Drawer State
+    var A1_SSS=0;   //A1 Shoes Shelf State
+    var A2_LDS=0;   //A2 Left Door State
+    var A3_LDS=0;   //A3 Left Door State
+    var A3_RDS=0;   //A3 Right Door State
+    var A3_TDS=0;   //A3 Top Drawer State
+    var A3_BDS=0;   //A3 Bottom Drawer State
+    var A3_SSS=0;   //A3 Shoes Shelf State
+    var A4_LDS=0;   //A4 Left Door State
+    var A4_RDS=0;   //A4 Right Door State
+    var A4_TDS=0;   //A4 Top Drawer State
+    var A4_BDS=0;   //A4 Bottom Drawer State
+
+
+
 
     // The first parameter can be used to specify which mesh to import. Here we import all meshes
     BABYLON.SceneLoader.Append(
@@ -226,7 +244,6 @@ var createScene = function () {
         camera.setPosition(new BABYLON.Vector3(-9500, 9500, 9500));
         scene.clearColor = new BABYLON.Color3(0.99, 0.99, 0.99);    
         //scene.camera.attachControl(AIR_Alum, true);
-
         //camera.setTarget(scene.getMeshByName("AIR_Cabinet"));
         camera.angularSensibility = 10;
         camera.moveSensibility = 10;
@@ -247,31 +264,169 @@ var pipeline = new BABYLON.DefaultRenderingPipeline(
             if (pickInfo.pickedMesh != null)
             {
                 console.log(pickInfo.pickedMesh.name);
+////
 
+ // AIR_01_LDoor Animation
+	if (pickInfo.pickedMesh.name=="AIR_01_LDoor")
+		{
+            if (pickInfo.pickedMesh.rotation.y==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_01_LDoor_Open", pickInfo.pickedMesh, "rotation.y", 30, 30, Door_Closed, Door_Opend, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A1_LDS=1;
+            }
+            else
+            {
+                if (A1_TDS==0 & A1_BDS==0 & A1_SSS==0)
+                {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_01_LDoor_Close", pickInfo.pickedMesh, "rotation.y", 30, 30, Door_Opend, -Door_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A1_LDS=0;
+                }
+            }
+		}
 
+ // AIR_01_RDoor Animation
+	if (pickInfo.pickedMesh.name=="AIR_01_RDoor")
+		{
+            if (pickInfo.pickedMesh.rotation.y==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_01_RDoor_Open", pickInfo.pickedMesh, "rotation.y", 30, 30, -Door_Closed, Door_Opend, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A1_RDS=1;
+            }
+            else
+            {
+                if (A1_TDS==0 & A1_BDS==0 & A1_SSS==0)
+                {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_01_RDoor_Close", pickInfo.pickedMesh, "rotation.y", 30, 30, Door_Opend, Door_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A1_RDS=0;
+                }
+            }
+		}
+
+// AIR_02_LDoor Animation
+	if (pickInfo.pickedMesh.name=="AIR_02_LDoor")
+		{
+            if (pickInfo.pickedMesh.rotation.y==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_02_LDoor_Open", pickInfo.pickedMesh, "rotation.y", 30, 30, Door_Closed, Door_Opend, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A2_LDS=1;
+            }
+            else
+            {
+                if (A1_TDS==0 & A1_BDS==0 & A1_SSS==0)
+                {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_02_LDoor_Close", pickInfo.pickedMesh, "rotation.y", 30, 30, Door_Opend, -Door_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A2_LDS=0;
+                }
+            }
+		}
+
+ // AIR_03_LDoor Animation
+	if (pickInfo.pickedMesh.name=="AIR_03_LDoor")
+		{
+            if (pickInfo.pickedMesh.rotation.y==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_03_LDoor_Open", pickInfo.pickedMesh, "rotation.y", 30, 30, Door_Closed, Door_Opend, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A3_LDS=1;
+            }
+            else
+            {
+                if (A3_TDS==0 & A3_BDS==0 & A3_SSS==0)
+                {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_03_LDoor_Close", pickInfo.pickedMesh, "rotation.y", 30, 30, Door_Opend, -Door_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A3_LDS=0;
+                }
+            }
+		}
+
+ // AIR_03_RDoor Animation
+	if (pickInfo.pickedMesh.name=="AIR_03_RDoor")
+		{
+            if (pickInfo.pickedMesh.rotation.y==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_03_RDoor_Open", pickInfo.pickedMesh, "rotation.y", 30, 30, -Door_Closed, Door_Opend, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A3_RDS=1;
+            }
+            else
+            {
+                if (A3_TDS==0 & A3_BDS==0 & A3_SSS==0)
+                {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_03_RDoor_Close", pickInfo.pickedMesh, "rotation.y", 30, 30, Door_Opend, Door_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A3_RDS=0;
+                }
+            }
+		}
+//
+ // AIR_04_LDoor Animation
+	if (pickInfo.pickedMesh.name=="AIR_04_LDoor")
+		{
+            if (pickInfo.pickedMesh.rotation.y==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_04_LDoor_Open", pickInfo.pickedMesh, "rotation.y", 30, 30, Door_Closed, Door_Opend, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A4_LDS=1;
+            }
+            else
+            {
+                if (A4_TDS==0 & A4_BDS==0)
+                {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_04_LDoor_Close", pickInfo.pickedMesh, "rotation.y", 30, 30, Door_Opend, -Door_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A4_LDS=0;
+                }
+            }
+		}
+
+ // AIR_04_RDoor Animation
+	if (pickInfo.pickedMesh.name=="AIR_04_RDoor")
+		{
+            if (pickInfo.pickedMesh.rotation.y==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_04_RDoor_Open", pickInfo.pickedMesh, "rotation.y", 30, 30, -Door_Closed, Door_Opend, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A4_RDS=1;
+            }
+            else
+            {
+                if (A4_TDS==0 & A4_BDS==0)
+                {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_04_RDoor_Close", pickInfo.pickedMesh, "rotation.y", 30, 30, Door_Opend, Door_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A4_RDS=0;
+                }
+            }
+		}
+
+////
  // AIR_01_Drawer_Top Animation
 	if (pickInfo.pickedMesh.name=="AIR_01_Drawer_Top")
 		{
             if (pickInfo.pickedMesh.position.z==0)
             {
+
+                if (A1_LDS==1 & A1_RDS==1)
+                {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_01_Drawer_Top_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A1_TDS=1;
+                }
             }
             else
             {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_01_Drawer_Top_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A1_TDS=0;
             }
 		}
 
  // AIR_01_Drawer_Bot Animation
 	if (pickInfo.pickedMesh.name=="AIR_01_Drawer_Bot")
 		{
-            if (pickInfo.pickedMesh.position.z==0)
+            if (pickInfo.pickedMesh.position.z==0)            
             {
+                if (A1_LDS==1 & A1_RDS==1)
+                {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_01_Drawer_Bot_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-            }
+                A1_BDS=1;
+                }
+            }   
             else
             {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_01_Drawer_Bot_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A1_BDS=0;
             }
 		}
 
@@ -280,11 +435,16 @@ var pipeline = new BABYLON.DefaultRenderingPipeline(
 		{
             if (pickInfo.pickedMesh.position.z==0)
             {
+                if (A1_LDS==1 & A1_RDS==1)
+                {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_01_Shoes_Shelf_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A1_SSS=1;
+                }
             }
             else
             {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_01_Shoes_Shelf_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A1_SSS=0;
             }
 		}
 ////
@@ -293,11 +453,16 @@ var pipeline = new BABYLON.DefaultRenderingPipeline(
 		{
             if (pickInfo.pickedMesh.position.z==0)
             {
+                if (A3_LDS==1 & A3_RDS==1)
+                {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_03_Drawer_Top_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A3_TDS=1;
+                }
             }
             else
             {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_03_Drawer_Top_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A3_TDS=0;
             }
 		}
 
@@ -306,11 +471,16 @@ var pipeline = new BABYLON.DefaultRenderingPipeline(
 		{
             if (pickInfo.pickedMesh.position.z==0)
             {
+                if (A3_LDS==1 & A3_RDS==1)
+                {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_03_Drawer_Bot_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A3_BDS=1;
+                }
             }
             else
             {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_03_Drawer_Bot_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A3_BDS=0;
             }
 		}
 
@@ -319,11 +489,16 @@ var pipeline = new BABYLON.DefaultRenderingPipeline(
 		{
             if (pickInfo.pickedMesh.position.z==0)
             {
+                if (A3_LDS==1 & A3_RDS==1)
+                {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_03_Shoes_Shelf_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A3_SSS=1;
+                }
             }
             else
             {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_03_Shoes_Shelf_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A3_SSS=0;
             }
 		}
 ////
@@ -332,11 +507,16 @@ var pipeline = new BABYLON.DefaultRenderingPipeline(
 		{
             if (pickInfo.pickedMesh.position.z==0)
             {
+                if (A4_LDS==1 & A4_RDS==1)
+                {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_04_Drawer_Top_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A4_TDS=1;
+                }
             }
             else
             {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_04_Drawer_Top_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A4_TDS=0;
             }
 		}
 
@@ -345,11 +525,16 @@ var pipeline = new BABYLON.DefaultRenderingPipeline(
 		{
             if (pickInfo.pickedMesh.position.z==0)
             {
+                if (A4_LDS==1 & A4_RDS==1)
+                {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_04_Drawer_Bot_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A4_BDS=1;
+                }
             }
             else
             {
                 BABYLON.Animation.CreateAndStartAnimation("AIR_04_Drawer_Bot_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                A4_BDS=0;
             }
 		}
 
