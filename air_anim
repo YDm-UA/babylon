@@ -1,0 +1,364 @@
+//https://playground.babylonjs.com/#22J0X5
+var createScene = function () {
+
+    var scene = new BABYLON.Scene(engine);
+	var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
+    var DoorOpend=1.8326; //105°
+    var DoorClosed=0;
+    var Drawer_Opened=450;
+    var Drawer_Closed=0;
+
+    // The first parameter can be used to specify which mesh to import. Here we import all meshes
+    BABYLON.SceneLoader.Append(
+        "https://raw.githubusercontent.com/YDm-UA/babylon/main/", "air.glb",
+        scene, function (newMeshes) {
+//scene materials
+    var SceneMat = new BABYLON.MultiMaterial('SceneMat', scene);
+        SceneMat.subMaterials.push(scene.getMaterialByName("Alum_Profile"));    // 0
+        SceneMat.subMaterials.push(scene.getMaterialByName("Glass_Brown"));     // 1        
+        SceneMat.subMaterials.push(scene.getMaterialByName("Timber"));          // 2
+        SceneMat.subMaterials.push(scene.getMaterialByName("White"));           // 3
+        SceneMat.subMaterials.push(scene.getMaterialByName("Floor"));           // 4
+        SceneMat.subMaterials.push(scene.getMaterialByName("Grey"));            // 5        
+        SceneMat.subMaterials.push(scene.getMaterialByName("Blue"));            // 6
+        SceneMat.subMaterials.push(scene.getMaterialByName("Yellow"));          // 7
+
+// Room
+    var Room = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("Room_primitive0"),
+            scene.getMeshByName("Room_primitive1"),
+            scene.getMeshByName("Room_primitive2"),
+            scene.getMeshByName("Room_primitive3"),
+            scene.getMeshByName("Room_primitive4")
+            ], true, true, undefined, false, true);
+        Room.material = SceneMat;
+        Room.subMeshes[0].materialIndex = 5;
+        Room.subMeshes[1].materialIndex = 7;
+        Room.subMeshes[2].materialIndex = 6;
+        Room.subMeshes[3].materialIndex = 3;
+        Room.subMeshes[4].materialIndex = 4;
+        Room.name = Room.id = "Room";
+
+// AIR_Cabinet
+    var AIR_Cabinet = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("AL_Frame"),
+            scene.getMeshByName("Glass_Shelves"),
+            scene.getMeshByName("Timber")
+            ], true, true, undefined, false, true);
+        AIR_Cabinet.material = SceneMat;
+        AIR_Cabinet.subMeshes[0].materialIndex = 0;
+        AIR_Cabinet.subMeshes[1].materialIndex = 1;
+        AIR_Cabinet.subMeshes[2].materialIndex = 2;
+        AIR_Cabinet.name = AIR_Cabinet.id = "AIR_Cabinet";
+                
+// AIR_01_LDoor
+    var AIR_01_LDoor = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("01_L_AL_Door"),
+            scene.getMeshByName("01_L_GL_Door")
+            ], true, true, undefined, false, true);
+        AIR_01_LDoor.material = SceneMat;
+        AIR_01_LDoor.subMeshes[0].materialIndex = 0;
+        AIR_01_LDoor.subMeshes[1].materialIndex = 1;
+        AIR_01_LDoor.name = AIR_01_LDoor.id = "AIR_01_LDoor";
+               
+// AIR_01_RDoor
+    var AIR_01_RDoor = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("01_R_AL_Door"),
+            scene.getMeshByName("01_R_GL_Door")
+            ], true, true, undefined, false, true);
+        AIR_01_RDoor.material = SceneMat;
+        AIR_01_RDoor.subMeshes[0].materialIndex = 0;
+        AIR_01_RDoor.subMeshes[1].materialIndex = 1;
+        AIR_01_RDoor.name = AIR_01_RDoor.id = "AIR_01_RDoor";
+               
+// AIR_02_LDoor
+    var AIR_02_LDoor = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("02_L_AL_Door"),
+            scene.getMeshByName("02_L_GL_Door")
+            ], true, true, undefined, false, true);
+        AIR_02_LDoor.material = SceneMat;
+        AIR_02_LDoor.subMeshes[0].materialIndex = 0;
+        AIR_02_LDoor.subMeshes[1].materialIndex = 1;
+        AIR_02_LDoor.name = AIR_02_LDoor.id = "AIR_02_LDoor";
+
+// AIR_03_LDoor
+    var AIR_03_LDoor = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("03_L_AL_Door"),
+            scene.getMeshByName("03_L_GL_Door")
+            ], true, true, undefined, false, true);
+        AIR_03_LDoor.material = SceneMat;
+        AIR_03_LDoor.subMeshes[0].materialIndex = 0;
+        AIR_03_LDoor.subMeshes[1].materialIndex = 1;
+        AIR_03_LDoor.name = AIR_03_LDoor.id = "AIR_03_LDoor";
+               
+// AIR_03_RDoor
+    var AIR_03_RDoor = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("03_R_AL_Door"),
+            scene.getMeshByName("03_R_GL_Door")
+            ], true, true, undefined, false, true);
+        AIR_03_RDoor.material = SceneMat;
+        AIR_03_RDoor.subMeshes[0].materialIndex = 0;
+        AIR_03_RDoor.subMeshes[1].materialIndex = 1;
+        AIR_03_RDoor.name = AIR_03_RDoor.id = "AIR_03_RDoor";
+
+// AIR_04_LDoor
+    var AIR_04_LDoor = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("04_L_AL_Door"),
+            scene.getMeshByName("04_L_GL_Door")
+            ], true, true, undefined, false, true);
+        AIR_04_LDoor.material = SceneMat;
+        AIR_04_LDoor.subMeshes[0].materialIndex = 0;
+        AIR_04_LDoor.subMeshes[1].materialIndex = 1;
+        AIR_04_LDoor.name = AIR_04_LDoor.id = "AIR_04_LDoor";
+               
+// AIR_04_RDoor
+    var AIR_04_RDoor = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("04_R_AL_Door"),
+            scene.getMeshByName("04_R_GL_Door")
+            ], true, true, undefined, false, true);
+        AIR_04_RDoor.material = SceneMat;
+        AIR_04_RDoor.subMeshes[0].materialIndex = 0;
+        AIR_04_RDoor.subMeshes[1].materialIndex = 1;
+        AIR_04_RDoor.name = AIR_04_RDoor.id = "AIR_04_RDoor";
+
+// AIR_01_Drawer_Top
+    var AIR_01_Drawer_Top = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("01_Drawer_Top_AL"),
+            scene.getMeshByName("01_Drawer_Top_Timber")
+            ], true, true, undefined, false, true);
+        AIR_01_Drawer_Top.material = SceneMat;
+        AIR_01_Drawer_Top.subMeshes[0].materialIndex = 0;
+        AIR_01_Drawer_Top.subMeshes[1].materialIndex = 2;
+        AIR_01_Drawer_Top.name = AIR_01_Drawer_Top.id = "AIR_01_Drawer_Top";        
+
+// AIR_01_Drawer_Bot
+    var AIR_01_Drawer_Bot = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("01_Drawer_Bot_AL"),
+            scene.getMeshByName("01_Drawer_Bot_Timber")
+            ], true, true, undefined, false, true);
+        AIR_01_Drawer_Bot.material = SceneMat;
+        AIR_01_Drawer_Bot.subMeshes[0].materialIndex = 0;
+        AIR_01_Drawer_Bot.subMeshes[1].materialIndex = 2;
+        AIR_01_Drawer_Bot.name = AIR_01_Drawer_Bot.id = "AIR_01_Drawer_Bot";
+
+// AIR_01_Shoes_Shelf
+    var AIR_01_Shoes_Shelf = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("01_SH_Shelf_AL"),
+            scene.getMeshByName("01_SH_Shelf_Timber")
+            ], true, true, undefined, false, true);
+        AIR_01_Shoes_Shelf.material = SceneMat;
+        AIR_01_Shoes_Shelf.subMeshes[0].materialIndex = 0;
+        AIR_01_Shoes_Shelf.subMeshes[1].materialIndex = 2;
+        AIR_01_Shoes_Shelf.name = AIR_01_Shoes_Shelf.id = "AIR_01_Shoes_Shelf";
+
+// AIR_03_Drawer_Top
+    var AIR_03_Drawer_Top = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("03_Drawer_Top_Glass"),
+            scene.getMeshByName("03_Drawer_Top_Timber")
+            ], true, true, undefined, false, true);
+        AIR_03_Drawer_Top.material = SceneMat;
+        AIR_03_Drawer_Top.subMeshes[0].materialIndex = 1;
+        AIR_03_Drawer_Top.subMeshes[1].materialIndex = 2;
+        AIR_03_Drawer_Top.name = AIR_03_Drawer_Top.id = "AIR_03_Drawer_Top";
+
+// AIR_03_Drawer_Bot
+    var AIR_03_Drawer_Bot = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("03_Drawer_Bot_Glass"),
+            scene.getMeshByName("03_Drawer_Bot_Timber")
+            ], true, true, undefined, false, true);
+        AIR_03_Drawer_Bot.material = SceneMat;
+        AIR_03_Drawer_Bot.subMeshes[0].materialIndex = 1;
+        AIR_03_Drawer_Bot.subMeshes[1].materialIndex = 2;
+        AIR_03_Drawer_Bot.name = AIR_03_Drawer_Bot.id = "AIR_03_Drawer_Bot";
+
+// AIR_03_Shoes_Shelf
+    var AIR_03_Shoes_Shelf = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("03_SH_Shelf_AL"),
+            scene.getMeshByName("03_SH_Shelf_Timber")
+            ], true, true, undefined, false, true);
+        AIR_03_Shoes_Shelf.material = SceneMat;
+        AIR_03_Shoes_Shelf.subMeshes[0].materialIndex = 0;
+        AIR_03_Shoes_Shelf.subMeshes[1].materialIndex = 2;
+        AIR_03_Shoes_Shelf.name = AIR_03_Shoes_Shelf.id = "AIR_03_Shoes_Shelf";
+
+// AIR_04_Drawer_Top
+    var AIR_04_Drawer_Top = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("04_Drawer_Top_Timber")
+            ], true, true, undefined, false, true);
+        AIR_04_Drawer_Top.material = SceneMat;
+        AIR_04_Drawer_Top.subMeshes[0].materialIndex = 2;
+        AIR_04_Drawer_Top.name = AIR_04_Drawer_Top.id = "AIR_04_Drawer_Top";
+		
+// AIR_04_Drawer_Bot
+    var AIR_04_Drawer_Bot = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("04_Drawer_Bot_Timber")
+            ], true, true, undefined, false, true);
+        AIR_04_Drawer_Bot.material = SceneMat;
+        AIR_04_Drawer_Bot.subMeshes[0].materialIndex = 2;
+        AIR_04_Drawer_Bot.name = AIR_04_Drawer_Bot.id = "AIR_04_Drawer_Bot";		
+    });
+
+//scene camera and light
+        scene.createDefaultCameraOrLight(true);
+        scene.activeCamera.attachControl(canvas, false);
+        scene.activeCamera.alpha += 0.1+Math.PI; // camera +180°
+        camera.minZ = 1;
+        camera.maxZ = 50000;
+        camera.wheelPrecision=0.1;
+        scene.clipPlane = null;
+        camera.setPosition(new BABYLON.Vector3(-9500, 9500, 9500));
+        scene.clearColor = new BABYLON.Color3(0.99, 0.99, 0.99);    
+        //scene.camera.attachControl(AIR_Alum, true);
+
+        //camera.setTarget(scene.getMeshByName("AIR_Cabinet"));
+        camera.angularSensibility = 10;
+        camera.moveSensibility = 10;
+        //camera.setTarget(new BABYLON.Vector3(-2, 4, 3));
+        camera.attachControl(canvas, true);
+	
+var pipeline = new BABYLON.DefaultRenderingPipeline(
+    "defaultPipeline", // The name of the pipeline
+    true, // Do you want the pipeline to use HDR texture?
+    scene, // The scene instance
+    [camera] // The list of cameras to be attached to
+);
+	pipeline.samples = 16;
+	pipeline.fxaaEnabled = true;	
+
+    scene.onPointerPick = function (evt, pickInfo) {
+        if (pickInfo.hit) {
+            if (pickInfo.pickedMesh != null)
+            {
+                console.log(pickInfo.pickedMesh.name);
+
+
+ // AIR_01_Drawer_Top Animation
+	if (pickInfo.pickedMesh.name=="AIR_01_Drawer_Top")
+		{
+            if (pickInfo.pickedMesh.position.z==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_01_Drawer_Top_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_01_Drawer_Top_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+		}
+
+ // AIR_01_Drawer_Bot Animation
+	if (pickInfo.pickedMesh.name=="AIR_01_Drawer_Bot")
+		{
+            if (pickInfo.pickedMesh.position.z==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_01_Drawer_Bot_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_01_Drawer_Bot_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+		}
+
+ // AIR_01_Shoes_Shelf Animation
+	if (pickInfo.pickedMesh.name=="AIR_01_Shoes_Shelf")
+		{
+            if (pickInfo.pickedMesh.position.z==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_01_Shoes_Shelf_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_01_Shoes_Shelf_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+		}
+////
+ // AIR_03_Drawer_Top Animation
+	if (pickInfo.pickedMesh.name=="AIR_03_Drawer_Top")
+		{
+            if (pickInfo.pickedMesh.position.z==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_03_Drawer_Top_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_03_Drawer_Top_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+		}
+
+ // AIR_03_Drawer_Bot Animation
+	if (pickInfo.pickedMesh.name=="AIR_03_Drawer_Bot")
+		{
+            if (pickInfo.pickedMesh.position.z==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_03_Drawer_Bot_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_03_Drawer_Bot_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+		}
+
+ // AIR_03_Shoes_Shelf Animation
+	if (pickInfo.pickedMesh.name=="AIR_03_Shoes_Shelf")
+		{
+            if (pickInfo.pickedMesh.position.z==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_03_Shoes_Shelf_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_03_Shoes_Shelf_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+		}
+////
+ // AIR_04_Drawer_Top Animation
+	if (pickInfo.pickedMesh.name=="AIR_04_Drawer_Top")
+		{
+            if (pickInfo.pickedMesh.position.z==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_04_Drawer_Top_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_04_Drawer_Top_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+		}
+
+ // AIR_04_Drawer_Bot Animation
+	if (pickInfo.pickedMesh.name=="AIR_04_Drawer_Bot")
+		{
+            if (pickInfo.pickedMesh.position.z==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_04_Drawer_Bot_Open", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+                BABYLON.Animation.CreateAndStartAnimation("AIR_04_Drawer_Bot_Close", pickInfo.pickedMesh, "position.z", 30, 30, Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+		}
+
+////
+            }
+
+        }
+    }
+    
+
+    return scene;
+}
