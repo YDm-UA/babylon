@@ -1,47 +1,61 @@
-//https://playground.babylonjs.com/#DWXJJ3
+https://playground.babylonjs.com/#DWXJJ3#1
 var createScene = function () {
 
-    var Door_Opened=1.5708;        //90°
+    //var Door_Opened=1.5708;        //90°
     var Door_Closed=0;
     var HF_Top_Hinge=1.51844; //87°
     var HF_Bot_Hinge=1.8675; //107°
+    var EdgeThk=5;
+    
     // This creates a basic Babylon Scene object (non-mesh)
     var scene = new BABYLON.Scene(engine);
 
     // This creates and positions a free camera (non-mesh)
-    var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(50, 5, 50), scene);
+    //var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(50, 5, 50), scene);
+    var camera = new BABYLON.ArcRotateCamera("ArcRotateCamera", 0, 0, 0, new BABYLON.Vector3(0, 0, 0), scene);
+    camera.setPosition(new BABYLON.Vector3(50, 50, 50));
 
     // This targets the camera to scene origin
-    camera.position=(new BABYLON.Vector3(50,50,50));
-    camera.setTarget(BABYLON.Vector3.Zero());
+    //camera.position=(new BABYLON.Vector3(50,50,50));
+    //camera.setTarget(BABYLON.Vector3.Zero());
     scene.clearColor = new BABYLON.Color3(0.95, 0.95, 0.95);
 
     // This attaches the camera to the canvas
     camera.attachControl(canvas, true);
-    //camera.angularSensibility = 1000;
+    camera.angularSensibility = 1000;
     //camera.moveSensibility = 1000;
+
+    
+
+//var Sphere = new BABYLON.Mesh.CreateSphere("Sphere",20,2,scene);
+//	Sphere.material=Edge_Defalut;
+//	Sphere.position.x=0;
+//	Sphere.position.y=0;
+//	Sphere.position.z=0;
 
     //HF_Top_Color
     var HF_Top_Color = new BABYLON.StandardMaterial("HF_Top_Color",scene);
-    HF_Top_Color.diffuseColor = new BABYLON.Color3(1, 1, 0);
+    HF_Top_Color.diffuseColor = new BABYLON.Color3(0, 0, 1);
 
 
     //HF_Bot_Color
     var HF_Bot_Color = new BABYLON.StandardMaterial("HF_Bot_Color",scene);
-    //HF_Bot_Color.emissiveColor = new BABYLON.Color3(0,1,1);
-    HF_Bot_Color.diffuseColor =  new BABYLON.Color3(0.4,0.8,0.8);
+    HF_Bot_Color.diffuseColor =  new BABYLON.Color3(1,1,0);
+
+    //HF_Top_Color
+        
+    var Edge_Defalut = new BABYLON.StandardMaterial("Edge_Defalut",scene);
+    Edge_Defalut.diffuseColor = new BABYLON.Color4(0, 1, 0, 1);
+
+    var Edge_highlight = new BABYLON.StandardMaterial("Edge_highlight",scene);
+    Edge_highlight.diffuseColor = new BABYLON.Color4(1, 0, 0, 1);
 
 
     // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
     var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
     // Default intensity is 1. Let's dim the light a small amount
-    light.intensity = 0.7;
-
-    // Our built-in 'sphere' shape.1
-    var SphereT = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 1.5, segments: 16}, scene);
-    var SphereB = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 1.5, segments: 16}, scene);
-    //var SphereC = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 1.5, segments: 16}, scene);
+    light.intensity = 1;
 
     var HF_Top = BABYLON.MeshBuilder.CreateBox("HF_Top",{width:20,height:12,depth:0.6},scene);
     HF_Top.material=HF_Top_Color;
@@ -49,53 +63,24 @@ var createScene = function () {
     HF_Top.actionManager = new BABYLON.ActionManager(scene);
     HF_Top.actionManager.isRecursive = true;
 
-    // Move the sphere upward 1/2 its height
-    SphereT.position.y = -(HF_Top.getBoundingInfo().boundingBox.maximum.y);
-    SphereT.parent=HF_Top;
-    SphereT.material=HF_Top_Color;
-//    SphereT.addChild=HF_Bot;
-   
-    //SphereB.position.x=6;
-    //SphereB.position.y=SphereT.position.y+6;
-    //SphereB.position=SphereT.position;
-    //SphereB.parent=SphereT;
-    //SphereB.position.y+=6;
-    //SphereB.material=HF_Bot_Color;
-    
+    HF_Top.edgesWidth=EdgeThk;
+    HF_Top.edgesColor.copyFromFloats(1,1,1,0.8); //.set(BABYLON.Color4(Edge_Defalut)); // new BABYLON.Color4(Edge_Defalut);    console.log(Edge_Defalut);
+    HF_Top.enableEdgesRendering();
+
 
     var HF_Bot = BABYLON.MeshBuilder.CreateBox("HF_Bot",{width:20,height:12,depth:0.6},scene);
     HF_Bot.material=HF_Bot_Color;
-    HF_Bot.position.y=-6;
-	HF_Bot.parent=SphereT;
-	var greenPivotAt = new BABYLON.Vector3(0, 6, 0);
+    HF_Bot.position.y = -((HF_Top.getBoundingInfo().boundingBox.maximum.y)+(HF_Bot.getBoundingInfo().boundingBox.maximum.y));
+    HF_Bot.parent=HF_Top;
+
+    HF_Bot.edgesWidth=EdgeThk;
+    HF_Bot.edgesColor.copyFromFloats(1,1,1,0.8);
+    HF_Bot.enableEdgesRendering();
+
+	var greenPivotAt = new BABYLON.Vector3(0, 6, -0.3);
 	HF_Bot.setPivotMatrix(BABYLON.Matrix.Translation(-greenPivotAt.x, -greenPivotAt.y, -greenPivotAt.z));
-	
-    //HF_Bot.setPositionWithLocalVector(0,HF_Bot.position.y=-6,0);
-    //HF_Bot.setPivotPoint(SphereT.getPivotPoint());
-    
 
 
-
-
-
-    //HF_Bot.setPivotPoint(new BABYLON.Vector3(0,(-HF_Bot.getBoundingInfo().boundingBox.maximum.y),0),scene);
-    //let pivotMatrix = BABYLON.Matrix.Translation(100,0,0);
-    //HF_Bot.setPivotMatrix(pivotMatrix);
-    //let preTransformMatrix = BABYLON.Matrix.Translation( 0, 0, 0);
-    //HF_Bot.setPreTransformMatrix(preTransformMatrix);
-
-
-    scene.onPointerPick = function (evt, pickInfo) {
-        if (pickInfo.hit) {
-            if (pickInfo.pickedMesh != null)
-            {
-                console.log(pickInfo.pickedMesh.name);
-                //console.log("x="+pickInfo.pickedMesh.getBoundingInfo().boundingBox.maximumWorld.x);
-                //console.log("y="+pickInfo.pickedMesh.getBoundingInfo().boundingBox.maximumWorld.y);
-                //console.log("z="+pickInfo.pickedMesh.getBoundingInfo().boundingBox.maximumWorld.z);
-            }
-        }
-    }    
 
             HF_Top.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
                 { trigger: BABYLON.ActionManager.OnPickDownTrigger },
@@ -111,8 +96,43 @@ var createScene = function () {
                 BABYLON.Animation.CreateAndStartAnimation("HF_Bot_Close", HF_Bot, "rotation.x", 30, 60, HF_Bot_Hinge, Door_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
             }
                 }));
-       
 
+
+            HF_Top.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+                { trigger: BABYLON.ActionManager.OnPointerOverTrigger },
+                function()
+                    {
+                    HF_Top.edgesColor.copyFromFloats(1,0,0,0.5);
+                    HF_Bot.edgesColor.copyFromFloats(1,0,0,0.5);
+
+                    //HF_Top.edgesWidth=EdgeThk;
+                    //HF_Bot.edgesWidth=HF_Top.edgesWidth;
+                    //HF_Top.edgesColor=new BABYLON.Color4(Edge_highlight);
+                    //HF_Bot.edgesColor=HF_Top.edgesColor;
+                    //HF_Top.enableEdgesRendering();
+                    //HF_Bot.enableEdgesRendering();
+                    }
+         
+         ));
+
+
+            HF_Top.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+                { trigger: BABYLON.ActionManager.OnPointerOutTrigger },
+                function()
+                    {
+                    HF_Top.edgesColor.copyFromFloats(1,1,1,0.8);
+                    HF_Bot.edgesColor.copyFromFloats(1,1,1,0.8);
+
+                    //HF_Top.edgesWidth=0;
+                    //HF_Bot.edgesWidth=HF_Top.edgesWidth;
+                    //HF_Top.edgesColor=new BABYLON.Color4(Edge_Defalut);
+                    //HF_Top.enableEdgesRendering();
+                    //HF_Bot.edgesColor=HF_Top.edgesColor;
+                    //HF_Top.disableEdgesRendering();
+                    //HF_Bot.disableEdgesRendering();
+                    }
+         
+         ));
 
 
 
@@ -156,7 +176,7 @@ var createScene = function () {
     	zChar.position = new BABYLON.Vector3(0, 0.05 * size, 0.9 * size);
 	};
 	
-	showAxis(20);
+	// showAxis(20);
     
     return scene;
 
