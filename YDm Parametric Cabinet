@@ -1,0 +1,113 @@
+//https://playground.babylonjs.com/#EXW0X0#12
+var createScene = function () {
+    // This creates a basic Babylon Scene object (non-mesh)
+    var scene = new BABYLON.Scene(engine);
+    scene.clearColor.set(0.9,0.9,0.9);
+    scene.collisionsEnabled = true;
+    //scene.enablePhysics();
+    //scene.gravity = new BABYLON.Vector3(0, -100, 0);	
+
+    // Declare Project Variables
+    var ArtHeight=720;
+    var ArtWidth=900;
+    var ArtDepth=560;
+    var MF0_THk=18;
+    var MEXT0_Thk=16;
+    var BP0_THk=MEXT0_Thk;
+
+    // This creates and positions a free camera (non-mesh)
+    var camera = new BABYLON.ArcRotateCamera("camera1",0,0,0, new BABYLON.Vector3(-ArtHeight*1.4,ArtDepth*1.4,ArtWidth*1.4),scene);
+    //("camera1", new BABYLON.Vector3(-ArtHeight, ArtDepth*2, ArtWidth*2), scene);
+
+    // This targets the camera to scene origin
+    camera.setTarget(BABYLON.Vector3.Zero());
+    camera.wheelPrecision=0.1;
+
+    // This attaches the camera to the canvas
+    camera.attachControl(canvas, true);
+
+    // This creates a light, aiming 0,1,0 - to the sky (non-mesh)
+    
+    var light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
+
+    // Default intensity is 1. Let's dim the light a small amount
+    light.intensity = 0.7;
+
+    var ArtMat= new BABYLON.StandardMaterial("ArtMat",scene);
+    ArtMat.alpha=0.5;
+
+    var SphereMat = new BABYLON.StandardMaterial("SphereMat",scene);
+    SphereMat.diffuseColor=new BABYLON.Color3(1,0,0);
+
+
+
+    // GUI
+    var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+    var Addbutton = BABYLON.GUI.Button.CreateSimpleButton("AddButton", "Add");
+    
+    Addbutton.width = "150px"
+    Addbutton.height = "40px";
+    Addbutton.color = "white";
+    Addbutton.cornerRadius = 20;
+    Addbutton.background = "green";
+    Addbutton.left=200;
+    Addbutton.top=250;
+    Addbutton.onPointerUpObservable.add(function() {
+
+    var Article = [];
+    var Article = BABYLON.MeshBuilder.CreateBox("ArtContainer",{width:ArtWidth,height:ArtHeight,depth:ArtDepth},scene);
+    Article.material=ArtMat;
+    Article.showBoundingBox=true;
+    Article.name=Article.id="Article_"+Article.uniqueId;
+    Article.push(ArtContainer);
+        
+    });
+    advancedTexture.addControl(Addbutton);  
+
+    var Delbutton = BABYLON.GUI.Button.CreateSimpleButton("Delbutton", "Del");
+    
+    Delbutton.width = "150px"
+    Delbutton.height = "40px";
+    Delbutton.color = "white";
+    Delbutton.cornerRadius = 20;
+    Delbutton.background = "red";
+    Delbutton.alpha=0.5;
+    //Delbutton.left=50;
+    //Delbutton.Top=250;
+     //advancedTexture.addControl(Delbutton);
+        //advancedTexture.con
+
+
+   scene.onPointerPick = function (evt, pickInfo)
+   {
+       if (pickInfo.hit)
+       {
+           if (pickInfo.pickedMesh != null)
+           {
+               console.log(pickInfo.pickedMesh.name);
+
+  advancedTexture.addControl(Delbutton);
+    Delbutton.onPointerUpObservable.add(function() {
+    pickInfo.pickedMesh.dispose();
+    advancedTexture.removeControl(Delbutton);
+    });
+
+
+}
+else
+{
+    advancedTexture.removeControl(Delbutton);
+     
+}
+   }
+   }
+
+
+///
+
+///
+   
+   
+    return scene;
+};
