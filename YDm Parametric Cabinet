@@ -1,3 +1,13 @@
+//https://www.babylonjs-playground.com/#4HUQQ#327
+// snap to example
+
+//https://www.babylonjs-playground.com/#28EVFY#1
+//snap example
+
+//https://www.babylonjs-playground.com/#KQV9SA
+// BoundingBox example
+
+
 //https://playground.babylonjs.com/#EXW0X0#12
 var createScene = function () {
     // This creates a basic Babylon Scene object (non-mesh)
