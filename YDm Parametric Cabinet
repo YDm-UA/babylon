@@ -16,7 +16,7 @@
 //collision detect
 
 
-//https://playground.babylonjs.com/#EXW0X0#12
+//https://playground.babylonjs.com/#EXW0X0#19
 var createScene = function () {
     // This creates a basic Babylon Scene object (non-mesh)
     var scene = new BABYLON.Scene(engine);
@@ -32,9 +32,11 @@ var createScene = function () {
     var MF0_THk=18;
     var MEXT0_Thk=16;
     var BP0_THk=MEXT0_Thk;
+    var SnapSphere=20;
+    var SnapVisibility=1;
 
     // This creates and positions a free camera (non-mesh)
-    var camera = new BABYLON.ArcRotateCamera("camera1",0,0,0, new BABYLON.Vector3(-ArtHeight*1.4,ArtDepth*1.4,ArtWidth*1.4),scene);
+    var camera = new BABYLON.ArcRotateCamera("camera1",-Math.PI / 2,-Math.PI / 2,-Math.PI / 2, new BABYLON.Vector3(-ArtHeight*1.4,ArtDepth*1.4,ArtWidth*1.4),scene);
     //("camera1", new BABYLON.Vector3(-ArtHeight, ArtDepth*2, ArtWidth*2), scene);
 
     // This targets the camera to scene origin
@@ -52,10 +54,19 @@ var createScene = function () {
     light.intensity = 0.7;
 
     var ArtMat= new BABYLON.StandardMaterial("ArtMat",scene);
-    ArtMat.alpha=0.5;
+    ArtMat.alpha=0.05;
+
+
+    var MEXT0 = new BABYLON.StandardMaterial("MEXT0",scene);
+    MEXT0.diffuseColor=new BABYLON.Color3(0.9,0.9,0.9);
+
+    var MAT_BP = new BABYLON.StandardMaterial("MAT_BP",scene);
+    MAT_BP.diffuseColor=new BABYLON.Color3(0.9,0.7,0.7);
+
 
     var SphereMat = new BABYLON.StandardMaterial("SphereMat",scene);
     SphereMat.diffuseColor=new BABYLON.Color3(1,0,0);
+
 
 
 
@@ -71,17 +82,229 @@ var createScene = function () {
     Addbutton.background = "green";
     Addbutton.left=200;
     Addbutton.top=250;
+    
     Addbutton.onPointerUpObservable.add(function() {
 
     var Article = [];
-    var Article = BABYLON.MeshBuilder.CreateBox("ArtContainer",{width:ArtWidth,height:ArtHeight,depth:ArtDepth},scene);
+    var Article = BABYLON.MeshBuilder.CreateBox("Article",{width:ArtWidth,height:ArtHeight,depth:ArtDepth},scene);
     Article.material=ArtMat;
     Article.showBoundingBox=true;
-    Article.name=Article.id="Article_"+Article.uniqueId;
-    Article.push(ArtContainer);
-        
+    Article.isPickable=true;
+    Article.name="Article";
+    
+///    
+	var matRed = new BABYLON.StandardMaterial("red", scene);
+    matRed.diffuseColor = new BABYLON.Color3(1, 0, 0); // red
+	var matBlue = new BABYLON.StandardMaterial("blue", scene);
+    matBlue.diffuseColor = new BABYLON.Color3(0, 0, 1); // blue
+	var matGreen = new BABYLON.StandardMaterial("green", scene);
+    matGreen.diffuseColor = new BABYLON.Color3(0, 1, 0); // green
+
+	Article.snapPointPositions = [
+		new BABYLON.Vector3( ArtWidth/2, -ArtHeight/2, ArtDepth/2),     // Left Bottom Front
+		new BABYLON.Vector3( ArtWidth/2, ArtHeight/2, ArtDepth/2),      // Left Top Front
+		new BABYLON.Vector3( -ArtWidth/2, ArtHeight/2, ArtDepth/2),     // Right Top Front
+		new BABYLON.Vector3( -ArtWidth/2, -ArtHeight/2, ArtDepth/2),    // Right Bottom Front
+		new BABYLON.Vector3( ArtWidth/2, -ArtHeight/2, -ArtDepth/2),    // Left Bottom Back
+		new BABYLON.Vector3( ArtWidth/2, ArtHeight/2, -ArtDepth/2),     // Left Top Back
+        new BABYLON.Vector3( -ArtWidth/2, ArtHeight/2, -ArtDepth/2),    // Right Top Back
+        new BABYLON.Vector3( -ArtWidth/2, -ArtHeight/2, -ArtDepth/2)    // Right Bottom Back
+	];
+
+
+	Article.snapPoints = {};
+	
+	for (var i = 0; i < Article.snapPointPositions.length; i++){
+		Article.snapPoints['snapPoint'+(i+1)] = BABYLON.Mesh.CreateSphere("snapPointOnBody", 6, SnapSphere*0.5, scene);
+		Article.snapPoints['snapPoint'+(i+1)].material = matRed;
+		Article.snapPoints['snapPoint'+(i+1)].parent = Article;
+        Article.snapPoints['snapPoint'+(i+1)].name = "Snap_Art_"+i;
+        Article.snapPoints['snapPoint'+(i+1)].id="Snap_Art_"+Article.uniqueId;
+		Article.snapPoints['snapPoint'+(i+1)].position = Article.snapPointPositions[i];	
+	}
+
+///
+	var SP_Left = BABYLON.MeshBuilder.CreateBox("SP_Left",{width: MEXT0_Thk, height: ArtHeight, depth: ArtDepth-BP0_THk},scene,false);
+	SP_Left.material=MEXT0;
+	//SP_Left.showBoundingBox=true;
+	SP_Left.isPickable=true;
+	SP_Left.name="SP_Left";
+	SP_Left.id=Article.uniqueId;
+
+
+	SP_Left.snapPointPositions = [
+		new BABYLON.Vector3( MEXT0_Thk/2, -ArtHeight/2, ArtDepth/2-BP0_THk/2),    // Left Bottom Front
+		new BABYLON.Vector3( MEXT0_Thk/2, ArtHeight/2, ArtDepth/2-BP0_THk/2),     // Left Top Front
+		new BABYLON.Vector3( -MEXT0_Thk/2, ArtHeight/2, ArtDepth/2-BP0_THk/2),    // Right Top Front
+		new BABYLON.Vector3( -MEXT0_Thk/2, -ArtHeight/2, ArtDepth/2-BP0_THk/2),   // Right Bottom Front
+		new BABYLON.Vector3( MEXT0_Thk/2, -ArtHeight/2, -(ArtDepth/2-BP0_THk/2)),   // Left Bottom Back
+		new BABYLON.Vector3( MEXT0_Thk/2, ArtHeight/2, -(ArtDepth/2-BP0_THk/2)),    // Left Top Back
+        new BABYLON.Vector3( -MEXT0_Thk/2, ArtHeight/2, -(ArtDepth/2-BP0_THk/2)),   // Right Top Back
+        new BABYLON.Vector3( -MEXT0_Thk/2, -ArtHeight/2, -(ArtDepth/2-BP0_THk/2))   // Right Bottom Back
+	];
+
+
+
+	SP_Left.snapPoints = {};
+	
+	for (var i = 0; i < SP_Left.snapPointPositions.length; i++){
+		SP_Left.snapPoints['snapPoint'+(i+1)] = BABYLON.Mesh.CreateSphere("snapPointOnBody", 6, SnapSphere*0.5, scene);
+		SP_Left.snapPoints['snapPoint'+(i+1)].material = matBlue;
+		SP_Left.snapPoints['snapPoint'+(i+1)].parent = SP_Left;
+        SP_Left.snapPoints['snapPoint'+(i+1)].name = "Snap_SP_Left_"+i;
+        SP_Left.snapPoints['snapPoint'+(i+1)].id="Snap_SP_Left_"+Article.uniqueId;
+		SP_Left.snapPoints['snapPoint'+(i+1)].position = SP_Left.snapPointPositions[i];	
+	}
+
+
+
+
+	PartAttach(
+		SP_Left,						// clone the extension part blueprint
+		Article.snapPoints['snapPoint1'],				// attach to snap point 1 on body
+		SP_Left.snapPoints['snapPoint1'],		// use snap point blue on extension part
+		new BABYLON.Vector3(-Math.PI / 2, 0, 0)		// apply new rotation
+	);      
+
+
+	var SP_Right = BABYLON.MeshBuilder.CreateBox("SP_Right",{width: MEXT0_Thk, height: ArtHeight, depth: ArtDepth-BP0_THk},scene,false);
+	SP_Right.material=MEXT0;
+	//SP_Right.showBoundingBox=true;
+	SP_Right.isPickable=true;
+	SP_Right.name="SP_Right";
+	SP_Right.id=Article.uniqueId;
+
+	SP_Right.snapPointPositions = [
+		new BABYLON.Vector3( MEXT0_Thk/2, -ArtHeight/2, ArtDepth/2-BP0_THk/2),    // Left Bottom Front
+		new BABYLON.Vector3( MEXT0_Thk/2, ArtHeight/2, ArtDepth/2-BP0_THk/2),     // Left Top Front
+		new BABYLON.Vector3( -MEXT0_Thk/2, ArtHeight/2, ArtDepth/2-BP0_THk/2),    // Right Top Front
+		new BABYLON.Vector3( -MEXT0_Thk/2, -ArtHeight/2, ArtDepth/2-BP0_THk/2),   // Right Bottom Front
+		new BABYLON.Vector3( MEXT0_Thk/2, -ArtHeight/2,  -(ArtDepth/2-BP0_THk/2)),   // Left Bottom Back
+		new BABYLON.Vector3( MEXT0_Thk/2, ArtHeight/2,  -(ArtDepth/2-BP0_THk/2)),    // Left Top Back
+        new BABYLON.Vector3( -MEXT0_Thk/2, ArtHeight/2,  -(ArtDepth/2-BP0_THk/2)),   // Right Top Back
+        new BABYLON.Vector3( -MEXT0_Thk/2, -ArtHeight/2,  -(ArtDepth/2-BP0_THk/2))   // Right Bottom Back
+	];
+
+
+
+	SP_Right.snapPoints = {};
+	
+	for (var i = 0; i < SP_Right.snapPointPositions.length; i++){
+		SP_Right.snapPoints['snapPoint'+(i+1)] = BABYLON.Mesh.CreateSphere("snapPointOnBody", 6, SnapSphere*0.5, scene);
+		SP_Right.snapPoints['snapPoint'+(i+1)].material = matBlue;
+		SP_Right.snapPoints['snapPoint'+(i+1)].parent = SP_Right;
+        SP_Right.snapPoints['snapPoint'+(i+1)].name = "Snap_SP_Right_"+i;
+        SP_Right.snapPoints['snapPoint'+(i+1)].id="Snap_SP_Right_"+Article.uniqueId;
+		SP_Right.snapPoints['snapPoint'+(i+1)].position = SP_Right.snapPointPositions[i];	
+	}
+
+	PartAttach(
+		SP_Right,						// clone the extension part blueprint
+		Article.snapPoints['snapPoint4'],				// attach to snap point 1 on body
+		SP_Right.snapPoints['snapPoint4']//,		// use snap point blue on extension part
+		//new BABYLON.Vector3(-Math.PI / 2, 0, 0)		// apply new rotation
+	);  
+
+
+	var BShelf = BABYLON.MeshBuilder.CreateBox("BShelf",{width: ArtWidth-(MEXT0_Thk*2), height: MEXT0_Thk, depth: ArtDepth-BP0_THk},scene,false);
+	BShelf.material=MEXT0;
+	//BShelf.showBoundingBox=true;
+	BShelf.isPickable=true;
+	BShelf.name="BShelf";
+	BShelf.id=Article.uniqueId;
+    
+
+///
+    
+	BShelf.snapPointPositions = [
+		new BABYLON.Vector3( ArtWidth/2-(MEXT0_Thk*2)/2, -MEXT0_Thk/2, ArtDepth/2-BP0_THk/2),     // Left Bottom Front
+		new BABYLON.Vector3( ArtWidth/2-(MEXT0_Thk*2)/2, MEXT0_Thk/2, ArtDepth/2-BP0_THk/2),      // Left Top Front
+		new BABYLON.Vector3( -ArtWidth/2+(MEXT0_Thk*2)/2, MEXT0_Thk/2, ArtDepth/2-BP0_THk/2),     // Right Top Front
+		new BABYLON.Vector3( -ArtWidth/2+(MEXT0_Thk*2)/2, -MEXT0_Thk/2, ArtDepth/2-BP0_THk/2),    // Right Bottom Front
+		new BABYLON.Vector3( ArtWidth/2-(MEXT0_Thk*2)/2, -MEXT0_Thk/2, -(ArtDepth/2-BP0_THk/2)),    // Left Bottom Back
+		new BABYLON.Vector3( ArtWidth/2-(MEXT0_Thk*2)/2, MEXT0_Thk/2, -(ArtDepth/2-BP0_THk/2)),     // Left Top Back
+        new BABYLON.Vector3( -ArtWidth/2+(MEXT0_Thk*2)/2, MEXT0_Thk/2, -(ArtDepth/2-BP0_THk/2)),    // Right Top Back
+        new BABYLON.Vector3( -ArtWidth/2+(MEXT0_Thk*2)/2, -MEXT0_Thk/2, -(ArtDepth/2-BP0_THk/2))    // Right Bottom Back
+	];
+
+	BShelf.snapPoints = {};
+	
+	for (var i = 0; i < BShelf.snapPointPositions.length; i++){
+		BShelf.snapPoints['snapPoint'+(i+1)] = BABYLON.Mesh.CreateSphere("snapPointOnBody", 6, SnapSphere*0.25, scene);
+		BShelf.snapPoints['snapPoint'+(i+1)].material = matGreen;
+		BShelf.snapPoints['snapPoint'+(i+1)].parent = BShelf;
+        BShelf.snapPoints['snapPoint'+(i+1)].name = "Snap_BShelf_"+i;
+        BShelf.snapPoints['snapPoint'+(i+1)].id="Snap_BShelf_"+Article.uniqueId;
+		BShelf.snapPoints['snapPoint'+(i+1)].position = BShelf.snapPointPositions[i];	
+	}
+
+	PartAttach(
+		BShelf,						// clone the extension part blueprint
+		SP_Left.snapPoints['snapPoint4'],				// attach to snap point 1 on body
+		BShelf.snapPoints['snapPoint1']		// use snap point blue on extension part
+		//BShelf.rotation.z=(Math.PI/2)
+        //new BABYLON.Vector3(-Math.PI / 3, -Math.PI / 2, -Math.PI / 5)		// apply new rotation
+	); 
+
+
+	var BPanel = BABYLON.MeshBuilder.CreateBox("BPanel",{width: ArtWidth, height: ArtHeight, depth: BP0_THk},scene,false);
+	BPanel.material=MAT_BP;
+	//BPanel.showBoundingBox=true;
+	BPanel.isPickable=true;
+	BPanel.name="BPanel";
+	BPanel.id=Article.uniqueId;
+
+
+	BPanel.snapPointPositions = [
+		new BABYLON.Vector3( ArtWidth/2, -ArtHeight/2, BP0_THk/2),    // Left Bottom Front
+		new BABYLON.Vector3( ArtWidth/2, ArtHeight/2, BP0_THk/2),     // Left Top Front
+		new BABYLON.Vector3( -ArtWidth/2, ArtHeight/2, BP0_THk/2),    // Right Top Front
+		new BABYLON.Vector3( -ArtWidth/2, -ArtHeight/2, BP0_THk/2),   // Right Bottom Front
+		new BABYLON.Vector3( ArtWidth/2, -ArtHeight/2, -BP0_THk/2),   // Left Bottom Back
+		new BABYLON.Vector3( ArtWidth/2, ArtHeight/2, -BP0_THk/2),    // Left Top Back
+        new BABYLON.Vector3( -ArtWidth/2, ArtHeight/2, -BP0_THk/2),   // Right Top Back
+        new BABYLON.Vector3( -ArtWidth/2, -ArtHeight/2, -BP0_THk/2)   // Right Bottom Back
+	];
+
+
+
+	BPanel.snapPoints = {};
+	
+	for (var i = 0; i < BPanel.snapPointPositions.length; i++){
+		BPanel.snapPoints['snapPoint'+(i+1)] = BABYLON.Mesh.CreateSphere("snapPointOnBody", 6, SnapSphere*0.75, scene);
+		BPanel.snapPoints['snapPoint'+(i+1)].material = matRed;
+		BPanel.snapPoints['snapPoint'+(i+1)].parent = BPanel;
+        BPanel.snapPoints['snapPoint'+(i+1)].name = "Snap_BPanel_"+i;
+        BPanel.snapPoints['snapPoint'+(i+1)].id="Snap_BPanel_"+Article.uniqueId;
+		BPanel.snapPoints['snapPoint'+(i+1)].position = BPanel.snapPointPositions[i];	
+	}
+
+
+
+
+	PartAttach(
+		BPanel,						// clone the extension part blueprint
+		SP_Left.snapPoints['snapPoint5'],				// attach to snap point 1 on body
+		BPanel.snapPoints['snapPoint1'],		// use snap point blue on extension part
+		new BABYLON.Vector3(-Math.PI / 2, 0, 0)		// apply new rotation
+	);      
+
+
+
     });
+
+
+
+
+
+
+for (var ArtCount = 0; ArtCount < scene.meshes.length; ArtCount++) {
+console.log("count array "+scene.meshes.length);
+}
+
     advancedTexture.addControl(Addbutton);  
+console.log("count "+scene.getMeshByName("Article"));
+console.log("array "+scene.meshes.length);
 
     var Delbutton = BABYLON.GUI.Button.CreateSimpleButton("Delbutton", "Del");
     
@@ -91,41 +314,81 @@ var createScene = function () {
     Delbutton.cornerRadius = 20;
     Delbutton.background = "red";
     Delbutton.alpha=0.5;
-    //Delbutton.left=50;
-    //Delbutton.Top=250;
-     //advancedTexture.addControl(Delbutton);
-        //advancedTexture.con
 
 
    scene.onPointerPick = function (evt, pickInfo)
    {
        if (pickInfo.hit)
        {
-           if (pickInfo.pickedMesh != null)
-           {
-               console.log(pickInfo.pickedMesh.name);
 
-  advancedTexture.addControl(Delbutton);
-    Delbutton.onPointerUpObservable.add(function() {
-    pickInfo.pickedMesh.dispose();
-    advancedTexture.removeControl(Delbutton);
-    });
+    console.log("SP nm="+pickInfo.pickedMesh.name);
+    console.log("SP ID="+pickInfo.pickedMesh.id);
 
 
-}
-else
-{
-    advancedTexture.removeControl(Delbutton);
-     
-}
-   }
-   }
+if (pickInfo.pickedMesh.name=="Article")
+                {
+                advancedTexture.addControl(Delbutton);
+                Delbutton.onPointerUpObservable.add(function()
+                {
+                   pickInfo.pickedMesh.dispose();
+                   advancedTexture.removeControl(Delbutton);
+                });
+                }
+                else
+                {
+                    advancedTexture.removeControl(Delbutton);
+                }
+console.log(pickInfo.pickedMesh.getAbsolutePosition());
+       }
+
+
+
+   };
+
+ 
+
+
+
+///
+	function attachToArticle(Article, snapPointOnTarget, snapPointOnExtensionPart) {
+		// attach extension part to snap point
+		Article.parent = snapPointOnTarget;
+	
+		// set the position of the snap point on the extension part by defining an offset for the extension part
+		//extensionPart.position = snapOffset;
+		
+		// rotate  extension part around the snap point as desired by actually rotating the snap point itself
+				
+		// set the offset for the extension part
+		Article.position = new BABYLON.Vector3(
+			snapPointOnExtensionPart.position.x * -1,
+			snapPointOnExtensionPart.position.y * -1,
+			snapPointOnExtensionPart.position.z * -1
+		);
+		
+		// show this clone instance of the extension part
+		Article.isVisible = true;
+	}
+///
+///
+	function PartAttach(SP_Left, snapPointOnTarget, PartSnapPoint) {
+		SP_Left.parent = snapPointOnTarget;
+
+		
+		SP_Left.position = new BABYLON.Vector3(
+			PartSnapPoint.position.x * -1,
+			PartSnapPoint.position.y * -1,
+			PartSnapPoint.position.z * -1
+		);
+		
+		// show this clone instance of the extension part
+		SP_Left.isVisible = true;
+	}
 
 
 ///
 
-///
-   
    
     return scene;
 };
+
