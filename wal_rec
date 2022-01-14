@@ -1,0 +1,81 @@
+var createScene = function () {
+    // This creates a basic Babylon Scene object (non-mesh)
+    var scene = new BABYLON.Scene(engine);
+	var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
+    BABYLON.SceneLoader.ImportMesh(
+        "",
+        "https://raw.githubusercontent.com/YDm-UA/babylon/main/",
+        "wal_reception.glb",
+        scene,
+        function (meshes) {          
+    
+    var SceneMat = new BABYLON.MultiMaterial('SceneMat', scene);
+        SceneMat.subMaterials.push(scene.getMaterialByName("Alum_Powdercoated"));   //0
+        SceneMat.subMaterials.push(scene.getMaterialByName("Black_Carcass"));       //1
+        SceneMat.subMaterials.push(scene.getMaterialByName("Black_Front"));         //2
+        SceneMat.subMaterials.push(scene.getMaterialByName("Kick_Front"));          //3
+        SceneMat.subMaterials.push(scene.getMaterialByName("White_Carcass"));       //4
+        SceneMat.subMaterials.push(scene.getMaterialByName("White_Front"));        //5
+
+
+// Base_Cabinets
+    var Reception = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("Frame"),
+            scene.getMeshByName("Kick_Front"),
+            scene.getMeshByName("Cabinets"),
+            scene.getMeshByName("Reception_Front"),
+            scene.getMeshByName("BT_White"),
+            scene.getMeshByName("BT_Black")
+            
+
+            ], true, true, undefined, false, true);
+   
+        Reception.material = SceneMat;
+        Reception.subMeshes[0].materialIndex = 4;       //Frame
+        Reception.subMeshes[1].materialIndex = 3;       //Kick_Front
+        Reception.subMeshes[2].materialIndex = 2;       //Cabinets
+        Reception.subMeshes[3].materialIndex = 5;       //Reception_Front
+        Reception.subMeshes[4].materialIndex = 5;       //BT_White
+        Reception.subMeshes[5].materialIndex = 2;       //BT_Black
+        Reception.name = Reception.id = "Reception";    
+
+
+
+});
+
+
+
+
+//
+
+        scene.createDefaultCameraOrLight(true);
+        scene.activeCamera.attachControl(canvas, false);
+        scene.activeCamera.alpha += 0.1+Math.PI; // camera +180°
+        camera.minZ = 1;
+        camera.maxZ = 1000;
+        camera.wheelPrecision=3;
+        scene.clipPlane = null;
+        camera.setPosition(new BABYLON.Vector3(-10, 5, 10));
+        scene.clearColor = new BABYLON.Color3(0.99, 0.99, 0.99);    
+        //scene.camera.attachControl(AIR_Alum, true);
+        //camera.setTarget(scene.getMeshByName("AIR_Cabinet"));
+        camera.angularSensibility = 1;
+        camera.moveSensibility = 1;
+        //camera.setTarget(new BABYLON.Vector3(-4, 12, -5));
+        camera.attachControl(canvas, true);
+	
+var pipeline = new BABYLON.DefaultRenderingPipeline(
+    "defaultPipeline", // The name of the pipeline
+    true, // Do you want the pipeline to use HDR texture?
+    scene, // The scene instance
+    [camera] // The list of cameras to be attached to
+);
+	pipeline.samples = 16;
+	pipeline.fxaaEnabled = true;	
+
+
+   
+
+    return scene;
+};
