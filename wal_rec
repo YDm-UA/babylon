@@ -7,11 +7,18 @@ var createScene = function () {
     scene.clearColor = new BABYLON.Color3(0.99, 0.99, 0.99);
 
 
-    var FDSPos= new BABYLON.Vector3(0, 0, 0);
-    var FDLEPos= new BABYLON.Vector3(1.15, 0, 0);
-    var FDREPos= new BABYLON.Vector3(-1.15, 0, 0);
-    var PDLEPos= new BABYLON.Vector3(1.18, 0, 0);
-    var PDREPos= new BABYLON.Vector3(-1.18, 0, 0);
+    var Door_Opened=1.8326;          //105°
+    var Door_Closed=0;
+    var Drawer_Opened=550;
+    var Drawer_Closed=0;
+
+    C03DS=0;
+    C04DS=0;
+
+
+
+    var Marker = new BABYLON.StandardMaterial("Marker",scene);
+    Marker.diffuseColor = new BABYLON.Color3(1, 0, 0);
 
 //scene camera and light
         scene.createDefaultCameraOrLight(true);
@@ -60,7 +67,26 @@ var createScene = function () {
         C01_Door.subMeshes[0].materialIndex = 3;
         C01_Door.subMeshes[1].materialIndex = 2;
         C01_Door.name = C01_Door.id = "C01_Door";
+        C01_Door.setPivotPoint(new BABYLON.Vector3(-1.45452,0.1,1.41222));
         //C01_Door.showBoundingBox=true;
+
+        C01_Door.actionManager = new BABYLON.ActionManager(scene);
+        C01_Door.actionManager.isRecursive = true;
+
+
+            C01_Door.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+                { trigger: BABYLON.ActionManager.OnPickDownTrigger },
+                function() {
+                    if (C01_Door.rotation.y==0)
+            {
+BABYLON.Animation.CreateAndStartAnimation("C01_Door_Open", C01_Door, "rotation.y", 30, 30, Door_Closed, Door_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.y", 30, 30, Door_Opened, -Door_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+                }));
+
 
 //C02_Drawer_01
     var C02_Drawer_01 = BABYLON.Mesh.MergeMeshes(
@@ -239,10 +265,13 @@ var pipeline = new BABYLON.DefaultRenderingPipeline(
 	pipeline.fxaaEnabled = true;
 
     // Our built-in 'sphere' shape.
-    var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.1, segments: 32}, scene);
+    var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.1, segments: 16}, scene);
 
     // Move the sphere upward 1/2 its height
-    sphere.position.y = 1;
+    sphere.position.x=-1.45452;
+    sphere.position.y =0.1;
+    sphere.position.z =1.41222;
+    sphere.material=Marker;
 
     // Our built-in 'ground' shape.
     //var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 6, height: 6}, scene);
