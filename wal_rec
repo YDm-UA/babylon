@@ -2,193 +2,216 @@ var createScene = function () {
     // This creates a basic Babylon Scene object (non-mesh)
     var scene = new BABYLON.Scene(engine);
 	var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
-    BABYLON.SceneLoader.ImportMesh(
-        "",
-        "https://raw.githubusercontent.com/YDm-UA/babylon/main/",
-        "wal_reception.glb",
-        scene,
-        function (meshes) {          
-    
+    camera.setPosition(new BABYLON.Vector3(-11, 11, -11));
+	camera.attachControl(canvas, false);
+    scene.clearColor = new BABYLON.Color3(0.99, 0.99, 0.99);
+
+
+    var FDSPos= new BABYLON.Vector3(0, 0, 0);
+    var FDLEPos= new BABYLON.Vector3(1.15, 0, 0);
+    var FDREPos= new BABYLON.Vector3(-1.15, 0, 0);
+    var PDLEPos= new BABYLON.Vector3(1.18, 0, 0);
+    var PDREPos= new BABYLON.Vector3(-1.18, 0, 0);
+
+//scene camera and light
+        scene.createDefaultCameraOrLight(true);
+        scene.activeCamera.attachControl(canvas, false);
+        scene.activeCamera.alpha += 0.1+Math.PI; // camera +180°    
+
+    // The first parameter can be used to specify which mesh to import. Here we import all meshes
+
+    BABYLON.SceneLoader.Append("https://raw.githubusercontent.com/YDm-UA/babylon/main/", "wal_reception_join.glb",
+    scene, function (newMeshes) {
+
+//scene materials
     var SceneMat = new BABYLON.MultiMaterial('SceneMat', scene);
-        SceneMat.subMaterials.push(scene.getMaterialByName("Alum_Powdercoated"));   //0
-        SceneMat.subMaterials.push(scene.getMaterialByName("Black_Carcass"));       //1
-        SceneMat.subMaterials.push(scene.getMaterialByName("Black_Front"));         //2
-        SceneMat.subMaterials.push(scene.getMaterialByName("Kick_Front"));          //3
-        SceneMat.subMaterials.push(scene.getMaterialByName("White_Carcass"));       //4
-        SceneMat.subMaterials.push(scene.getMaterialByName("White_Front"));        //5
+        SceneMat.subMaterials.push(scene.getMaterialByName("Carcass"));             // 0
+        SceneMat.subMaterials.push(scene.getMaterialByName("Drawer"));              // 1
+        SceneMat.subMaterials.push(scene.getMaterialByName("Front"));               // 2
+        SceneMat.subMaterials.push(scene.getMaterialByName("Handle"));              // 3
+        SceneMat.subMaterials.push(scene.getMaterialByName("Kick"));                // 4
+        SceneMat.subMaterials.push(scene.getMaterialByName("White"));               // 5
 
 
-// Base_Cabinets
+//Reception
     var Reception = BABYLON.Mesh.MergeMeshes(
         [
-            scene.getMeshByName("Frame"),
-            scene.getMeshByName("Kick_Front"),
-            scene.getMeshByName("Cabinets"),
-            scene.getMeshByName("Reception_Front"),
-            scene.getMeshByName("BT_White"),
-            scene.getMeshByName("BT_Black")
-            
-
+            scene.getMeshByName("Reception_primitive0"),
+            scene.getMeshByName("Reception_primitive1"),
+            scene.getMeshByName("Reception_primitive2"),
+            scene.getMeshByName("Reception_primitive3")
             ], true, true, undefined, false, true);
-   
         Reception.material = SceneMat;
-        Reception.subMeshes[0].materialIndex = 4;       //Frame
-        Reception.subMeshes[1].materialIndex = 3;       //Kick_Front
-        Reception.subMeshes[2].materialIndex = 2;       //Cabinets
-        Reception.subMeshes[3].materialIndex = 5;       //Reception_Front
-        Reception.subMeshes[4].materialIndex = 5;       //BT_White
-        Reception.subMeshes[5].materialIndex = 2;       //BT_Black
-        Reception.name = Reception.id = "Reception";    
+        Reception.subMeshes[0].materialIndex = 5;
+        Reception.subMeshes[1].materialIndex = 2;
+        Reception.subMeshes[2].materialIndex = 4;
+        Reception.subMeshes[3].materialIndex = 0;
+        Reception.name = Reception.id = "Reception";
+        //Reception.showBoundingBox=true;
 
-// C01_Door
+
+//C01_Door
     var C01_Door = BABYLON.Mesh.MergeMeshes(
         [
-            scene.getMeshByName("C01_Door_primitive0"),     //Handle
-            scene.getMeshByName("C01_Door_primitive1")      //Front
-            ], true, true, undefined, false, true);   
+            scene.getMeshByName("C01_Door_primitive0"),
+            scene.getMeshByName("C01_Door_primitive1")
+            ], true, true, undefined, false, true);
         C01_Door.material = SceneMat;
-        C01_Door.subMeshes[0].materialIndex = 0;       //Handle
-        C01_Door.subMeshes[1].materialIndex = 2;       //Front
-        C01_Door.name = C01_Door.id = "C01_Door"; 
+        C01_Door.subMeshes[0].materialIndex = 3;
+        C01_Door.subMeshes[1].materialIndex = 2;
+        C01_Door.name = C01_Door.id = "C01_Door";
+        //C01_Door.showBoundingBox=true;
 
-
-// C02_Drawer_01
+//C02_Drawer_01
     var C02_Drawer_01 = BABYLON.Mesh.MergeMeshes(
         [
-            scene.getMeshByName("C02_Drawer_01_primitive0"),     //Drawer
-            scene.getMeshByName("C02_Drawer_01_primitive1"),     //Front
-            scene.getMeshByName("C02_Drawer_01_primitive2")      //Handle
+            scene.getMeshByName("C02_Drawer_01_primitive0"),
+            scene.getMeshByName("C02_Drawer_01_primitive1"),
+            scene.getMeshByName("C02_Drawer_01_primitive2")
             ], true, true, undefined, false, true);
         C02_Drawer_01.material = SceneMat;
-        C02_Drawer_01.subMeshes[0].materialIndex = 1;       //Drawer
-        C02_Drawer_01.subMeshes[1].materialIndex = 2;       //Front
-        C02_Drawer_01.subMeshes[2].materialIndex = 0;       //Handle
-        C02_Drawer_01.name = C02_Drawer_01.id = "C02_Drawer_01"; 
+        C02_Drawer_01.subMeshes[0].materialIndex = 3;
+        C02_Drawer_01.subMeshes[1].materialIndex = 2;
+        C02_Drawer_01.subMeshes[2].materialIndex = 1;        
+        C02_Drawer_01.name = C02_Drawer_01.id = "C02_Drawer_01";
+        //C02_Drawer_01.showBoundingBox=true;
 
-// C02_Drawer_02
+//C02_Drawer_02
     var C02_Drawer_02 = BABYLON.Mesh.MergeMeshes(
         [
-            scene.getMeshByName("C02_Drawer_02_primitive1"),     //Drawer
-            scene.getMeshByName("C02_Drawer_02_primitive0"),     //Front
-            scene.getMeshByName("C02_Drawer_02_primitive2")      //Handle
+            scene.getMeshByName("C02_Drawer_02_primitive0"),
+            scene.getMeshByName("C02_Drawer_02_primitive1"),
+            scene.getMeshByName("C02_Drawer_02_primitive2")
             ], true, true, undefined, false, true);
         C02_Drawer_02.material = SceneMat;
-        C02_Drawer_02.subMeshes[0].materialIndex = 1;       //Drawer
-        C02_Drawer_02.subMeshes[1].materialIndex = 2;       //Front
-        C02_Drawer_02.subMeshes[2].materialIndex = 0;       //Handle
-        C02_Drawer_02.name = C02_Drawer_02.id = "C02_Drawer_02"; 
+        C02_Drawer_02.subMeshes[0].materialIndex = 3;
+        C02_Drawer_02.subMeshes[1].materialIndex = 2;
+        C02_Drawer_02.subMeshes[2].materialIndex = 1;        
+        C02_Drawer_02.name = C02_Drawer_02.id = "C02_Drawer_02";
+        //C02_Drawer_02.showBoundingBox=true;
 
-// C02_Drawer_03
+//C02_Drawer_03
     var C02_Drawer_03 = BABYLON.Mesh.MergeMeshes(
         [
-            scene.getMeshByName("C02_Drawer_03_primitive1"),     //Drawer
-            scene.getMeshByName("C02_Drawer_03_primitive0"),     //Front
-            scene.getMeshByName("C02_Drawer_03_primitive2")      //Handle
+            scene.getMeshByName("C02_Drawer_03_primitive0"),
+            scene.getMeshByName("C02_Drawer_03_primitive1"),
+            scene.getMeshByName("C02_Drawer_03_primitive2")
             ], true, true, undefined, false, true);
         C02_Drawer_03.material = SceneMat;
-        C02_Drawer_03.subMeshes[0].materialIndex = 1;       //Drawer
-        C02_Drawer_03.subMeshes[1].materialIndex = 2;       //Front
-        C02_Drawer_03.subMeshes[2].materialIndex = 0;       //Handle
-        C02_Drawer_03.name = C02_Drawer_03.id = "C02_Drawer_03"; 
+        C02_Drawer_03.subMeshes[0].materialIndex = 3;
+        C02_Drawer_03.subMeshes[1].materialIndex = 2;
+        C02_Drawer_03.subMeshes[2].materialIndex = 1;        
+        C02_Drawer_03.name = C02_Drawer_03.id = "C02_Drawer_03";
+        //C02_Drawer_03.showBoundingBox=true;
 
-// C02_Drawer_04
+//C02_Drawer_04
     var C02_Drawer_04 = BABYLON.Mesh.MergeMeshes(
         [
-            scene.getMeshByName("C02_Drawer_04_primitive0"),     //Drawer
-            scene.getMeshByName("C02_Drawer_04_primitive1"),     //Front
-            scene.getMeshByName("C02_Drawer_04_primitive2")      //Handle
+            scene.getMeshByName("C02_Drawer_04_primitive0"),
+            scene.getMeshByName("C02_Drawer_04_primitive1"),
+            scene.getMeshByName("C02_Drawer_04_primitive2")
             ], true, true, undefined, false, true);
         C02_Drawer_04.material = SceneMat;
-        C02_Drawer_04.subMeshes[0].materialIndex = 1;       //Drawer
-        C02_Drawer_04.subMeshes[1].materialIndex = 2;       //Front
-        C02_Drawer_04.subMeshes[2].materialIndex = 0;       //Handle
-        C02_Drawer_04.name = C02_Drawer_04.id = "C02_Drawer_04"; 
+        C02_Drawer_04.subMeshes[0].materialIndex = 3;
+        C02_Drawer_04.subMeshes[1].materialIndex = 2;
+        C02_Drawer_04.subMeshes[2].materialIndex = 1;        
+        C02_Drawer_04.name = C02_Drawer_04.id = "C02_Drawer_04";
+        //C02_Drawer_04.showBoundingBox=true;
 
-
-// C03_Drawer_01
+//C03_Drawer_01
     var C03_Drawer_01 = BABYLON.Mesh.MergeMeshes(
         [
-            scene.getMeshByName("C03_Drawer_01_primitive0"),     //Drawer
-            scene.getMeshByName("C03_Drawer_01_primitive1"),     //Front
-            scene.getMeshByName("C03_Drawer_01_primitive2")      //Handle
+            scene.getMeshByName("C03_Drawer_01_primitive0"),
+            scene.getMeshByName("C03_Drawer_01_primitive1"),
+            scene.getMeshByName("C03_Drawer_01_primitive2")
             ], true, true, undefined, false, true);
         C03_Drawer_01.material = SceneMat;
-        C03_Drawer_01.subMeshes[0].materialIndex = 1;       //Drawer
-        C03_Drawer_01.subMeshes[1].materialIndex = 2;       //Front
-        C03_Drawer_01.subMeshes[2].materialIndex = 0;       //Handle
-        C03_Drawer_01.name = C03_Drawer_01.id = "C03_Drawer_01"; 
+        C03_Drawer_01.subMeshes[0].materialIndex = 3;
+        C03_Drawer_01.subMeshes[1].materialIndex = 2;
+        C03_Drawer_01.subMeshes[2].materialIndex = 1;        
+        C03_Drawer_01.name = C03_Drawer_01.id = "C03_Drawer_01";
+        //C03_Drawer_01.showBoundingBox=true;
 
-// C03_Drawer_02
+//C03_Drawer_02
     var C03_Drawer_02 = BABYLON.Mesh.MergeMeshes(
         [
-            scene.getMeshByName("C03_Drawer_02_primitive1"),     //Drawer
-            scene.getMeshByName("C03_Drawer_02_primitive0"),     //Front
-            scene.getMeshByName("C03_Drawer_02_primitive2")      //Handle
+            scene.getMeshByName("C03_Drawer_02_primitive0"),
+            scene.getMeshByName("C03_Drawer_02_primitive1"),
+            scene.getMeshByName("C03_Drawer_02_primitive2")
             ], true, true, undefined, false, true);
         C03_Drawer_02.material = SceneMat;
-        C03_Drawer_02.subMeshes[0].materialIndex = 1;       //Drawer
-        C03_Drawer_02.subMeshes[1].materialIndex = 2;       //Front
-        C03_Drawer_02.subMeshes[2].materialIndex = 0;       //Handle
-        C03_Drawer_02.name = C03_Drawer_02.id = "C03_Drawer_02"; 
+        C03_Drawer_02.subMeshes[0].materialIndex = 3;
+        C03_Drawer_02.subMeshes[1].materialIndex = 2;
+        C03_Drawer_02.subMeshes[2].materialIndex = 1;        
+        C03_Drawer_02.name = C03_Drawer_02.id = "C03_Drawer_02";
+        //C03_Drawer_02.showBoundingBox=true;
 
-// C03_Drawer_03
+//C03_Drawer_03
     var C03_Drawer_03 = BABYLON.Mesh.MergeMeshes(
         [
-            scene.getMeshByName("C03_Drawer_03_primitive0"),     //Drawer
-            scene.getMeshByName("C03_Drawer_03_primitive1"),     //Front
-            scene.getMeshByName("C03_Drawer_03_primitive2")      //Handle
+            scene.getMeshByName("C03_Drawer_03_primitive0"),
+            scene.getMeshByName("C03_Drawer_03_primitive1"),
+            scene.getMeshByName("C03_Drawer_03_primitive2")
             ], true, true, undefined, false, true);
         C03_Drawer_03.material = SceneMat;
-        C03_Drawer_03.subMeshes[0].materialIndex = 1;       //Drawer
-        C03_Drawer_03.subMeshes[1].materialIndex = 2;       //Front
-        C03_Drawer_03.subMeshes[2].materialIndex = 0;       //Handle
-        C03_Drawer_03.name = C03_Drawer_03.id = "C03_Drawer_03"; 
+        C03_Drawer_03.subMeshes[0].materialIndex = 3;
+        C03_Drawer_03.subMeshes[1].materialIndex = 2;
+        C03_Drawer_03.subMeshes[2].materialIndex = 1;        
+        C03_Drawer_03.name = C03_Drawer_03.id = "C03_Drawer_03";
+        //C03_Drawer_03.showBoundingBox=true;
 
-// C03_Drawer_04
+//C03_Drawer_04
     var C03_Drawer_04 = BABYLON.Mesh.MergeMeshes(
         [
-            scene.getMeshByName("C03_Drawer_04_primitive1"),     //Drawer
-            scene.getMeshByName("C03_Drawer_04_primitive0"),     //Front
-            scene.getMeshByName("C03_Drawer_04_primitive2")      //Handle
+            scene.getMeshByName("C03_Drawer_04_primitive0"),
+            scene.getMeshByName("C03_Drawer_04_primitive1"),
+            scene.getMeshByName("C03_Drawer_04_primitive2")
             ], true, true, undefined, false, true);
         C03_Drawer_04.material = SceneMat;
-        C03_Drawer_04.subMeshes[0].materialIndex = 1;       //Drawer
-        C03_Drawer_04.subMeshes[1].materialIndex = 2;       //Front
-        C03_Drawer_04.subMeshes[2].materialIndex = 0;       //Handle
-        C03_Drawer_04.name = C03_Drawer_04.id = "C03_Drawer_04"; 
+        C03_Drawer_04.subMeshes[0].materialIndex = 3;
+        C03_Drawer_04.subMeshes[1].materialIndex = 2;
+        C03_Drawer_04.subMeshes[2].materialIndex = 1;        
+        C03_Drawer_04.name = C03_Drawer_04.id = "C03_Drawer_04";
+        //C03_Drawer_04.showBoundingBox=true;
 
-// C04_Door
+//C04_Door
     var C04_Door = BABYLON.Mesh.MergeMeshes(
         [
-            scene.getMeshByName("C04_Door_primitive0"),     //Handle
-            scene.getMeshByName("C04_Door_primitive1")      //Front
+            scene.getMeshByName("C04_Door_primitive0"),
+            scene.getMeshByName("C04_Door_primitive1")
             ], true, true, undefined, false, true);
         C04_Door.material = SceneMat;
-        C04_Door.subMeshes[0].materialIndex = 0;       //Handle
-        C04_Door.subMeshes[1].materialIndex = 2;       //Front
-        C04_Door.name = C04_Door.id = "C04_Door"; 
+        C04_Door.subMeshes[0].materialIndex = 3;
+        C04_Door.subMeshes[1].materialIndex = 2;
+        C04_Door.name = C04_Door.id = "C04_Door";
+        //C04_Door.showBoundingBox=true;        
 
-// C05_Drawer_01
+//C05_Drawer_01
     var C05_Drawer_01 = BABYLON.Mesh.MergeMeshes(
         [
-            scene.getMeshByName("C05_Drawer_01_primitive2"),     //Drawer
-            scene.getMeshByName("C05_Drawer_01_primitive1"),     //Front
-            scene.getMeshByName("C05_Drawer_01_primitive0")      //Handle
+            scene.getMeshByName("C05_Drawer_01_primitive0"),
+            scene.getMeshByName("C05_Drawer_01_primitive1"),
+            scene.getMeshByName("C05_Drawer_01_primitive2")
             ], true, true, undefined, false, true);
         C05_Drawer_01.material = SceneMat;
-        C05_Drawer_01.subMeshes[0].materialIndex = 1;       //Drawer
-        C05_Drawer_01.subMeshes[1].materialIndex = 2;       //Front
-        C05_Drawer_01.subMeshes[2].materialIndex = 0;       //Handle
-        C05_Drawer_01.name = C05_Drawer_01.id = "C05_Drawer_01"; 
+        C05_Drawer_01.subMeshes[0].materialIndex = 3;
+        C05_Drawer_01.subMeshes[1].materialIndex = 2;
+        C05_Drawer_01.subMeshes[2].materialIndex = 1;        
+        C05_Drawer_01.name = C05_Drawer_01.id = "C05_Drawer_01";
+        //C05_Drawer_01.showBoundingBox=true;
 
+//BT_Open
+    var BT_Open = BABYLON.Mesh.MergeMeshes(
+        [
+            scene.getMeshByName("BT_Black_Opening")
+            ], true, true, undefined, false, true);
+        BT_Open.material = SceneMat;
+        BT_Open.subMeshes[0].materialIndex = 2;
+        BT_Open.name = BT_Open.id = "BT_Open";
+        //BT_Open.showBoundingBox=true;
 
-
-});
-
-
-
-
-//
+////        
+    });        
 
         scene.createDefaultCameraOrLight(true);
         scene.activeCamera.attachControl(canvas, false);
@@ -213,10 +236,16 @@ var pipeline = new BABYLON.DefaultRenderingPipeline(
     [camera] // The list of cameras to be attached to
 );
 	pipeline.samples = 16;
-	pipeline.fxaaEnabled = true;	
+	pipeline.fxaaEnabled = true;
 
+    // Our built-in 'sphere' shape.
+    var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.1, segments: 32}, scene);
 
-   
+    // Move the sphere upward 1/2 its height
+    sphere.position.y = 1;
+
+    // Our built-in 'ground' shape.
+    //var ground = BABYLON.MeshBuilder.CreateGround("ground", {width: 6, height: 6}, scene);
 
     return scene;
 };
