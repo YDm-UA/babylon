@@ -9,11 +9,20 @@ var createScene = function () {
 
     var Door_Opened=1.8326;          //105°
     var Door_Closed=0;
-    var Drawer_Opened=550;
+    var Drawer_Opened=0.45;
     var Drawer_Closed=0;
 
-    C03DS=0;
+    C01DS=0;
+    C02D1S=0;
+    C02D2S=0;
+    C02D3S=0;
+    C02D4S=0;
+    C03D1S=0;
+    C03D2S=0;
+    C03D3S=0;
+    C03D4S=0;
     C04DS=0;
+    C05D1S=0;
 
 
 
@@ -68,13 +77,10 @@ var createScene = function () {
         C01_Door.subMeshes[1].materialIndex = 2;
         C01_Door.name = C01_Door.id = "C01_Door";
         C01_Door.setPivotPoint(new BABYLON.Vector3(-1.45452,0.1,1.41222));
-        //C01_Door.showBoundingBox=true;
-
         C01_Door.actionManager = new BABYLON.ActionManager(scene);
         C01_Door.actionManager.isRecursive = true;
-
-
-            C01_Door.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+        
+        C01_Door.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
                 { trigger: BABYLON.ActionManager.OnPickDownTrigger },
                 function() {
                     if (C01_Door.rotation.y==0)
@@ -101,6 +107,29 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C02_Drawer_01.subMeshes[2].materialIndex = 1;        
         C02_Drawer_01.name = C02_Drawer_01.id = "C02_Drawer_01";
         //C02_Drawer_01.showBoundingBox=true;
+        C02_Drawer_01.setPivotPoint(new BABYLON.Vector3(0.796678,0.6,1.41222));
+        C02_Drawer_01.actionManager = new BABYLON.ActionManager(scene);
+        C02_Drawer_01.actionManager.isRecursive = true;
+
+        C02_Drawer_01.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+                { trigger: BABYLON.ActionManager.OnPickDownTrigger },
+                function() {
+                    if (C02_Drawer_01.position.z==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("C02_Drawer_01_Open", C02_Drawer_01, "position.z", 30, 30, Drawer_Closed, -Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                C02D1S=1;
+            }
+            else
+            {
+                if (C02D1S==1)
+                {
+                BABYLON.Animation.CreateAndStartAnimation("C02_Drawer_01_Close", C02_Drawer_01, "position.z", 30, 30, -Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                C02D1S=0;
+                }
+            }
+                }));
+
+
 
 //C02_Drawer_02
     var C02_Drawer_02 = BABYLON.Mesh.MergeMeshes(
@@ -115,6 +144,28 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C02_Drawer_02.subMeshes[2].materialIndex = 1;        
         C02_Drawer_02.name = C02_Drawer_02.id = "C02_Drawer_02";
         //C02_Drawer_02.showBoundingBox=true;
+        C02_Drawer_02.setPivotPoint(new BABYLON.Vector3(0.672494,0.6,1.41222));
+        C02_Drawer_02.actionManager = new BABYLON.ActionManager(scene);
+        C02_Drawer_02.actionManager.isRecursive = true;
+
+        C02_Drawer_02.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+                { trigger: BABYLON.ActionManager.OnPickDownTrigger },
+                function() {
+                    if (C02_Drawer_02.position.z==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("C02_Drawer_02_Open", C02_Drawer_02, "position.z", 30, 30, Drawer_Closed, -Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                C02D2S=1;
+            }
+            else
+            {
+                if (C02D2S==1)
+                {
+                BABYLON.Animation.CreateAndStartAnimation("C02_Drawer_02_Close", C02_Drawer_02, "position.z", 30, 30, -Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                C02D2S=0;
+                }
+            }
+                }));
+
 
 //C02_Drawer_03
     var C02_Drawer_03 = BABYLON.Mesh.MergeMeshes(
@@ -129,6 +180,27 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C02_Drawer_03.subMeshes[2].materialIndex = 1;        
         C02_Drawer_03.name = C02_Drawer_03.id = "C02_Drawer_03";
         //C02_Drawer_03.showBoundingBox=true;
+        C02_Drawer_03.setPivotPoint(new BABYLON.Vector3(0.548494,0.6,1.41222));
+        C02_Drawer_03.actionManager = new BABYLON.ActionManager(scene);
+        C02_Drawer_03.actionManager.isRecursive = true;
+
+        C02_Drawer_03.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+                { trigger: BABYLON.ActionManager.OnPickDownTrigger },
+                function() {
+                    if (C02_Drawer_03.position.z==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("C02_Drawer_03_Open", C02_Drawer_03, "position.z", 30, 30, Drawer_Closed, -Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                C02D3S=1;
+            }
+            else
+            {
+                if (C02D3S==1)
+                {
+                BABYLON.Animation.CreateAndStartAnimation("C02_Drawer_03_Close", C02_Drawer_03, "position.z", 30, 30, -Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                C02D3S=0;
+                }
+            }
+                }));        
 
 //C02_Drawer_04
     var C02_Drawer_04 = BABYLON.Mesh.MergeMeshes(
@@ -143,6 +215,28 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C02_Drawer_04.subMeshes[2].materialIndex = 1;        
         C02_Drawer_04.name = C02_Drawer_04.id = "C02_Drawer_04";
         //C02_Drawer_04.showBoundingBox=true;
+        C02_Drawer_04.setPivotPoint(new BABYLON.Vector3(0.303494,0.6,1.41222));
+        C02_Drawer_04.actionManager = new BABYLON.ActionManager(scene);
+        C02_Drawer_04.actionManager.isRecursive = true;
+
+        C02_Drawer_04.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+                { trigger: BABYLON.ActionManager.OnPickDownTrigger },
+                function() {
+                    if (C02_Drawer_04.position.z==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("C02_Drawer_04_Open", C02_Drawer_04, "position.z", 30, 30, Drawer_Closed, -Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                C02D4S=1;
+            }
+            else
+            {
+                if (C02D4S==1)
+                {
+                BABYLON.Animation.CreateAndStartAnimation("C02_Drawer_04_Close", C02_Drawer_04, "position.z", 30, 30, -Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                C02D4S=0;
+                }
+            }
+                }));
+
 
 //C03_Drawer_01
     var C03_Drawer_01 = BABYLON.Mesh.MergeMeshes(
@@ -268,8 +362,8 @@ var pipeline = new BABYLON.DefaultRenderingPipeline(
     var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.1, segments: 16}, scene);
 
     // Move the sphere upward 1/2 its height
-    sphere.position.x=-1.45452;
-    sphere.position.y =0.1;
+    sphere.position.x=0.613778;
+    sphere.position.y =0.796678;
     sphere.position.z =1.41222;
     sphere.material=Marker;
 
