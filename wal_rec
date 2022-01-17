@@ -404,6 +404,25 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C05_Drawer_01.subMeshes[2].materialIndex = 1;        
         C05_Drawer_01.name = C05_Drawer_01.id = "C05_Drawer_01";
         //C05_Drawer_01.showBoundingBox=true;
+        C05_Drawer_01.setPivotPoint(new BABYLON.Vector3(2.14595,0.794744,1.41222));
+        
+        //C05_Drawer_01.rotate(z, Door_FixedAgle, BABYLON.Space.WORLD);
+
+        C05_Drawer_01.actionManager = new BABYLON.ActionManager(scene);
+        C05_Drawer_01.actionManager.isRecursive = true;
+        C05_Drawer_01.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+                { trigger: BABYLON.ActionManager.OnPickDownTrigger },
+                function() {
+                    if (C05_Drawer_01.position.z==0)
+            {
+                BABYLON.Animation.CreateAndStartAnimation("C05_Drawer_01_Open", C05_Drawer_01, "position.z", 30, 30, Drawer_Closed, -Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+                BABYLON.Animation.CreateAndStartAnimation("C05_Drawer_01_Close", C05_Drawer_01, "position.z", 30, 30, -Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+                }));
+
 
 //BT_Open
     var BT_Open = BABYLON.Mesh.MergeMeshes(
@@ -423,7 +442,7 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         scene.activeCamera.alpha += 0.1+Math.PI; // camera +180°
         camera.minZ = 1;
         camera.maxZ = 1000;
-        camera.wheelPrecision=3;
+        camera.wheelPrecision=10;
         scene.clipPlane = null;
         camera.setPosition(new BABYLON.Vector3(-10, 5, 10));
         scene.clearColor = new BABYLON.Color3(0.99, 0.99, 0.99);    
@@ -447,9 +466,9 @@ var pipeline = new BABYLON.DefaultRenderingPipeline(
     var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.1, segments: 16}, scene);
 
     // Move the sphere upward 1/2 its height
-    sphere.position.x=1.74824;
-    sphere.position.y =0.469;
-    sphere.position.z =1.39914;
+    sphere.position.x=2.14595;
+    sphere.position.y =0.794744;
+    sphere.position.z =0.202498;
     sphere.material=Marker;
 
     // Our built-in 'ground' shape.
