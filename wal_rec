@@ -433,6 +433,22 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         BT_Open.subMeshes[0].materialIndex = 2;
         BT_Open.name = BT_Open.id = "BT_Open";
         //BT_Open.showBoundingBox=true;
+        BT_Open.setPivotPoint(new BABYLON.Vector3(-2.48708,0.87,0.46125));
+        BT_Open.actionManager = new BABYLON.ActionManager(scene);
+        BT_Open.actionManager.isRecursive = true;
+        BT_Open.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
+                { trigger: BABYLON.ActionManager.OnPickDownTrigger },
+                function() {
+                    if (BT_Open.rotation.x==0)
+            {
+BABYLON.Animation.CreateAndStartAnimation("BT_Open_Open", BT_Open, "rotation.x", 30, 30, Door_Closed, -Door_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+            else
+            {
+BABYLON.Animation.CreateAndStartAnimation("BT_Open_Close", BT_Open, "rotation.x", 30, 30, -Door_Opened, -Door_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+            }
+                }));
+
 
 ////        
     });        
