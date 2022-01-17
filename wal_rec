@@ -404,8 +404,9 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C05_Drawer_01.subMeshes[2].materialIndex = 1;        
         C05_Drawer_01.name = C05_Drawer_01.id = "C05_Drawer_01";
         //C05_Drawer_01.showBoundingBox=true;
-        C05_Drawer_01.setPivotPoint(new BABYLON.Vector3(2.14595,0.794744,1.41222));
-        
+        C05_Drawer_01.setPivotPoint(new BABYLON.Vector3(2.24029,0.794744,0.052199));
+
+
         //C05_Drawer_01.rotate(z, Door_FixedAgle, BABYLON.Space.WORLD);
 
         C05_Drawer_01.actionManager = new BABYLON.ActionManager(scene);
@@ -413,13 +414,13 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C05_Drawer_01.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
                 { trigger: BABYLON.ActionManager.OnPickDownTrigger },
                 function() {
-                    if (C05_Drawer_01.position.z==0)
+                    if (C05_Drawer_01.position.x==0)
             {
-                BABYLON.Animation.CreateAndStartAnimation("C05_Drawer_01_Open", C05_Drawer_01, "position.z", 30, 30, Drawer_Closed, -Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                BABYLON.Animation.CreateAndStartAnimation("C05_Drawer_01_Open", C05_Drawer_01, "position.x", 30, 30, Drawer_Closed, -Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
             }
             else
             {
-                BABYLON.Animation.CreateAndStartAnimation("C05_Drawer_01_Close", C05_Drawer_01, "position.z", 30, 30, -Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+                BABYLON.Animation.CreateAndStartAnimation("C05_Drawer_01_Close", C05_Drawer_01, "position.x", 30, 30, -Drawer_Opened, Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
             }
                 }));
 
