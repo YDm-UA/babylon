@@ -4,7 +4,7 @@
 var createScene = function () {
     // This creates a basic Babylon Scene object (non-mesh)
     var scene = new BABYLON.Scene(engine);
-	var camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
+    camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
     camera.setPosition(new BABYLON.Vector3(-11, 11, -11));
 	camera.attachControl(canvas, false);
     //scene.clearColor = new BABYLON.Color3(0.99, 0.99, 0.99);
@@ -12,6 +12,7 @@ var createScene = function () {
 	camera.upperBetaLimit = (Math.PI / 2) * 0.9;
 	camera.lowerRadiusLimit = 10;
 	camera.upperRadiusLimit = 20;
+    var renderer = scene.enableDepthRenderer();
 
     var Door_Opened=1.8326;          //105°
     var Door_FixedAgle=1.44862;          //83°
@@ -25,16 +26,12 @@ var createScene = function () {
     C034DS=0;    
     C04DS=0;
 
-
-
-
     var Marker = new BABYLON.StandardMaterial("Marker",scene);
     Marker.diffuseColor = new BABYLON.Color3(1, 0, 0);
 
-//scene camera and light
-        scene.createDefaultCameraOrLight(true);
-        scene.activeCamera.attachControl(canvas, false);
-        scene.activeCamera.alpha += 0.1+Math.PI; // camera +180°    
+var mat = new BABYLON.StandardMaterial("mat01", scene);
+mat.emissiveTexture = renderer.getDepthMap();
+
 
     // The first parameter can be used to specify which mesh to import. Here we import all meshes
 
@@ -65,6 +62,8 @@ var createScene = function () {
         Reception.subMeshes[2].materialIndex = 4;
         Reception.subMeshes[3].materialIndex = 0;
         Reception.name = Reception.id = "Reception";
+        Reception.receiveShadows=true;
+        Reception.freezeWorldMatrix();
         //Reception.showBoundingBox=true;
 
 
@@ -78,6 +77,7 @@ var createScene = function () {
         C01_Door.subMeshes[0].materialIndex = 3;
         C01_Door.subMeshes[1].materialIndex = 2;
         C01_Door.name = C01_Door.id = "C01_Door";
+        C01_Door.receiveShadows=true;
         C01_Door.setPivotPoint(new BABYLON.Vector3(-1.45452,0.469,1.41222));
         C01_Door.actionManager = new BABYLON.ActionManager(scene);
         C01_Door.actionManager.isRecursive = true;
@@ -108,6 +108,7 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C02_Drawer_01.subMeshes[1].materialIndex = 2;
         C02_Drawer_01.subMeshes[2].materialIndex = 1;        
         C02_Drawer_01.name = C02_Drawer_01.id = "C02_Drawer_01";
+        C02_Drawer_01.receiveShadows=true;
         //C02_Drawer_01.showBoundingBox=true;
         C02_Drawer_01.setPivotPoint(new BABYLON.Vector3(0.796678,0.6,1.41222));
         C02_Drawer_01.actionManager = new BABYLON.ActionManager(scene);
@@ -140,6 +141,7 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C02_Drawer_02.subMeshes[1].materialIndex = 2;
         C02_Drawer_02.subMeshes[2].materialIndex = 1;        
         C02_Drawer_02.name = C02_Drawer_02.id = "C02_Drawer_02";
+        C02_Drawer_02.receiveShadows=true;
         //C02_Drawer_02.showBoundingBox=true;
         C02_Drawer_02.setPivotPoint(new BABYLON.Vector3(0.672494,0.6,1.41222));
         C02_Drawer_02.actionManager = new BABYLON.ActionManager(scene);
@@ -171,6 +173,7 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C02_Drawer_03.subMeshes[1].materialIndex = 2;
         C02_Drawer_03.subMeshes[2].materialIndex = 1;        
         C02_Drawer_03.name = C02_Drawer_03.id = "C02_Drawer_03";
+        C02_Drawer_03.receiveShadows=true;
         //C02_Drawer_03.showBoundingBox=true;
         C02_Drawer_03.setPivotPoint(new BABYLON.Vector3(0.548494,0.6,1.41222));
         C02_Drawer_03.actionManager = new BABYLON.ActionManager(scene);
@@ -201,6 +204,7 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C02_Drawer_04.subMeshes[1].materialIndex = 2;
         C02_Drawer_04.subMeshes[2].materialIndex = 1;        
         C02_Drawer_04.name = C02_Drawer_04.id = "C02_Drawer_04";
+        C02_Drawer_04.receiveShadows=true;
         //C02_Drawer_04.showBoundingBox=true;
         C02_Drawer_04.setPivotPoint(new BABYLON.Vector3(0.303494,0.6,1.41222));
         C02_Drawer_04.actionManager = new BABYLON.ActionManager(scene);
@@ -232,6 +236,7 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C03_Drawer_01.subMeshes[1].materialIndex = 2;
         C03_Drawer_01.subMeshes[2].materialIndex = 1;        
         C03_Drawer_01.name = C03_Drawer_01.id = "C03_Drawer_01";
+        C03_Drawer_01.receiveShadows=true;
         //C03_Drawer_01.showBoundingBox=true;
         C03_Drawer_01.setPivotPoint(new BABYLON.Vector3(0.796678,0.6,1.41222));
         C03_Drawer_01.actionManager = new BABYLON.ActionManager(scene);
@@ -267,6 +272,7 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C03_Drawer_02.subMeshes[1].materialIndex = 2;
         C03_Drawer_02.subMeshes[2].materialIndex = 1;        
         C03_Drawer_02.name = C03_Drawer_02.id = "C03_Drawer_02";
+        C03_Drawer_02.receiveShadows=true;
         //C03_Drawer_02.showBoundingBox=true;
         C03_Drawer_02.setPivotPoint(new BABYLON.Vector3(0.672494,0.6,1.41222));
         C03_Drawer_02.actionManager = new BABYLON.ActionManager(scene);
@@ -303,6 +309,7 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C03_Drawer_03.subMeshes[1].materialIndex = 2;
         C03_Drawer_03.subMeshes[2].materialIndex = 1;        
         C03_Drawer_03.name = C03_Drawer_03.id = "C03_Drawer_03";
+        C03_Drawer_03.receiveShadows=true;
         //C03_Drawer_03.showBoundingBox=true;
         C03_Drawer_03.setPivotPoint(new BABYLON.Vector3(0.672494,0.6,1.41222));
         C03_Drawer_03.actionManager = new BABYLON.ActionManager(scene);
@@ -338,6 +345,7 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C03_Drawer_04.subMeshes[1].materialIndex = 2;
         C03_Drawer_04.subMeshes[2].materialIndex = 1;        
         C03_Drawer_04.name = C03_Drawer_04.id = "C03_Drawer_04";
+        C03_Drawer_04.receiveShadows=true;
         //C03_Drawer_04.showBoundingBox=true;
         C03_Drawer_04.setPivotPoint(new BABYLON.Vector3(0.672494,0.6,1.41222));
         C03_Drawer_04.actionManager = new BABYLON.ActionManager(scene);
@@ -373,6 +381,7 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C04_Door.subMeshes[0].materialIndex = 3;
         C04_Door.subMeshes[1].materialIndex = 2;
         C04_Door.name = C04_Door.id = "C04_Door";
+        C04_Door.receiveShadows=true;
         //C04_Door.showBoundingBox=true;        
         C04_Door.setPivotPoint(new BABYLON.Vector3(1.74824,0.469,1.39914));
         C04_Door.actionManager = new BABYLON.ActionManager(scene);
@@ -409,6 +418,7 @@ BABYLON.Animation.CreateAndStartAnimation("C01_Door_Close", C01_Door, "rotation.
         C05_Drawer_01.subMeshes[1].materialIndex = 2;
         C05_Drawer_01.subMeshes[2].materialIndex = 1;        
         C05_Drawer_01.name = C05_Drawer_01.id = "C05_Drawer_01";
+        C05_Drawer_01.receiveShadows=true;
         //C05_Drawer_01.showBoundingBox=true;
         C05_Drawer_01.setPivotPoint(new BABYLON.Vector3(2.24029,0.794744,0.052199));
 
@@ -440,22 +450,28 @@ BABYLON.Animation.CreateAndStartAnimation("BT_Open_Close", BT_Open, "rotation.x"
                 }));
 
 
+
+
 ////        
     });        
 
+//scene camera and light
+        var helper = scene.createDefaultEnvironment();
+        helper.setMainColor(BABYLON.Color3.White());
         scene.createDefaultCameraOrLight(true);
         scene.activeCamera.attachControl(canvas, false);
-        scene.activeCamera.alpha += 0.1+Math.PI; // camera +180°
+        scene.activeCamera.alpha += 0.1+Math.PI; // camera +180°    
+        
         camera.minZ = 0.01;
         camera.maxZ = 1000;
         camera.wheelPrecision=10;
         scene.clipPlane = null;
-        camera.setPosition(new BABYLON.Vector3(-10, 5, 10));
+        //camera.setPosition(new BABYLON.Vector3(-10, 5, 10));
         scene.clearColor = new BABYLON.Color3(0.99, 0.99, 0.99);    
         camera.angularSensibility = 1;
         camera.moveSensibility = 1;
         //camera.setTarget(new BABYLON.Vector3(-4, 12, -5));
-        camera.attachControl(canvas, true);
+        //camera.attachControl(canvas, true);
 	
 var pipeline = new BABYLON.DefaultRenderingPipeline(
     "defaultPipeline", // The name of the pipeline
@@ -466,33 +482,17 @@ var pipeline = new BABYLON.DefaultRenderingPipeline(
 	pipeline.samples = 16;
 	pipeline.fxaaEnabled = true;
 
-
-
-    var light = new BABYLON.PointLight("light", new BABYLON.Vector3(5, 2, 2), scene);
-    light.range = 1000;
-    light.intensity = 1;
+    var light = new BABYLON.PointLight("light", new BABYLON.Vector3(0, 5, 0), scene);
+    light.range = 10000;
+    light.intensity = 10;
     light.falloffType = BABYLON.Light.FALLOFF_STANDARD;
 
     // Our built-in 'sphere' shape.
-//    var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.1, segments: 16}, scene);
+    //var sphere = BABYLON.MeshBuilder.CreateSphere("sphere", {diameter: 0.1, segments: 16}, scene);
     // Move the sphere upward 1/2 its height
-//    sphere.position=light.position;
-//    sphere.material=Marker;
+    //sphere.position=light.position;
+    //sphere.material=Marker;
 
-    var light1 = new BABYLON.PointLight("light1", new BABYLON.Vector3(-5, 2, 2), scene);
-    light1.range = 1000;
-    light1.intensity = 1;
-    light1.falloffType = BABYLON.Light.FALLOFF_STANDARD;
-
-    var light2 = new BABYLON.PointLight("light2", new BABYLON.Vector3(0, 0.5, -1), scene);
-    light2.range = 1000;
-    light2.intensity = 2;
-    light2.falloffType = BABYLON.Light.FALLOFF_STANDARD;
-
-    var light3 = new BABYLON.PointLight("light3", new BABYLON.Vector3(1, 1, 3), scene);
-    light3.range = 1000;
-    light3.intensity = 1;
-    light3.falloffType = BABYLON.Light.FALLOFF_STANDARD;
 
     return scene;
 };
