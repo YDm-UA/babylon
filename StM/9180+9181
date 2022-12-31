@@ -1,4 +1,5 @@
 //https://playground.babylonjs.com/#C64WTF#9
+//https://playground.babylonjs.com/#07Q17T Rebuilded
 var createScene = function () {
 
     var scene = new BABYLON.Scene(engine);
