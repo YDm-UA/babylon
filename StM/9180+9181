@@ -1,4 +1,4 @@
-//https://playground.babylonjs.com/#07Q17T
+//https://playground.babylonjs.com/#C64WTF#9
 var createScene = function () {
 
     var scene = new BABYLON.Scene(engine);
@@ -6,13 +6,25 @@ var createScene = function () {
     camera = new BABYLON.ArcRotateCamera("Camera", 0, 0, 0, BABYLON.Vector3.Zero(), scene);
     camera.setPosition(new BABYLON.Vector3(-11, 11, -11));
 	camera.attachControl(canvas, false);
-	
+    //scene.clearColor = new BABYLON.Color3(0.99, 0.99, 0.99);
+	camera.lowerBetaLimit = 0.1;
+	camera.upperBetaLimit = (Math.PI / 2) * 0.9;
+	camera.lowerRadiusLimit = 1;
+	camera.upperRadiusLimit = 1;
+    camera.minZ = 0.01;
+    camera.checkCollisions = true;
+    camera.ellipsoid = new BABYLON.Vector3(1, 1, 1); 
+    var renderer = scene.enableDepthRenderer();
+
     scene.useRightHandedSystem = true;    
    
     var Drawer_Opened=0.3;
     var Drawer_Closed=0;
-    var Dr_0_Status=0;
-    var Dr_1_Status=0;
+    var Drawer_0_Status=0;
+    var Drawer_1_Status=0;
+    var Drawer_2_Status=0;
+    var Drawer_3_Status=0;
+
     var cDrawer_Opened=0.25;
     var cDrawer_Closed=0;
     var camera_x=0.698132;
@@ -20,6 +32,15 @@ var createScene = function () {
     var camera_z=0.523599;
 
     var ac_code = '9181';
+
+
+var MAT_HDL_Gold = new BABYLON.StandardMaterial("MAT_HDL_Gold", scene);
+MAT_HDL_Gold.diffuseTexture = new BABYLON.Texture("https://raw.githubusercontent.com/YDm-UA/babylon/main/StM/textures/cmp_hdl_gold.jpg", scene);
+
+var MAT_HDL_Titan = new BABYLON.StandardMaterial("MAT_HDL_Titan", scene);
+MAT_HDL_Titan.diffuseTexture = new BABYLON.Texture("https://raw.githubusercontent.com/YDm-UA/babylon/main/StM/textures/cmp_hdl_titan.jpg", scene);
+
+
 
 BABYLON.SceneLoader.ShowLoadingScreen = false;
 
@@ -37,10 +58,15 @@ BABYLON.SceneLoader.LoadAssetContainer("", url, scene, function (container) {
 **/
 
     // Load the model
+    //BABYLON.SceneLoader.Append("https://www.babylonjs.com/Assets/NeonPipe/glTF/", "NeonPipe.gltf", scene, function (meshes) 
+//    BABYLON.SceneLoader.Append("https://raw.githubusercontent.com/YDm-UA/babylon/main/", "9181BT1-F2.glb",
     BABYLON.SceneLoader.Append("https://raw.githubusercontent.com/YDm-UA/babylon/main/StM/", "9181.glb",
+
     scene, function (newMeshes)
     {
- console.log(scene.meshes.name);
+
+
+
 //scene materials
     var SceneMat = new BABYLON.MultiMaterial('SceneMat', scene);
         SceneMat.subMaterials.push(scene.getMaterialByName("MAT_FRONT"));               // 0
@@ -50,14 +76,29 @@ BABYLON.SceneLoader.LoadAssetContainer("", url, scene, function (container) {
         SceneMat.subMaterials.push(scene.getMaterialByName("MAT_BT_HPL"));              // 4
         SceneMat.subMaterials.push(scene.getMaterialByName("MAT_Handle_int"));          // 5
 
+  var BT = BABYLON.Mesh.MergeMeshes(
+        [
+            //scene.getMeshByName("11_BT_HPL_primitive0"),
+            scene.getMeshByName("11_BT")
+            ], true, true, undefined, false, true);        
+        BT.material = SceneMat;
+        BT.subMeshes[0].materialIndex = 1;
+
+        BT.name = BT.id = "BT";
+        BT.receiveShadows=true;
+        BT.freezeWorldMatrix();
+//        BT.showBoundingBox=true;
+        BT.setPivotPoint(new BABYLON.Vector3(0,0,0));
+
 //Drawer_0
     var Drawer_0 = BABYLON.Mesh.MergeMeshes(
         [
-            scene.getMeshByName("Drawer_0_primitive0"),
-            scene.getMeshByName("Drawer_0_primitive1"),
-            scene.getMeshByName("Drawer_0_Front"),
-            scene.getMeshByName("Drawer_0_Handle"),
-            scene.getMeshByName("Drawer_0_Onda")
+            scene.getMeshByName("Drawer_0_primitive0"),                   //Drawer
+            scene.getMeshByName("Drawer_0_primitive1"),             //Drawer Handle
+            scene.getMeshByName("Drawer_0_Front"),             //Drawer Handle
+            scene.getMeshByName("Drawer_0_Handle"),             //Drawer Handle
+            scene.getMeshByName("Drawer_0_Onda")             //Drawer Handle
+
             ], true, true, undefined, false, true);
         Drawer_0.material = SceneMat;
         Drawer_0.subMeshes[0].materialIndex = 1;
@@ -68,35 +109,28 @@ BABYLON.SceneLoader.LoadAssetContainer("", url, scene, function (container) {
         scene.getTransformNodeByName("Drawer_0").dispose();
 
         Drawer_0.name = Drawer_0.id = "Drawer_0";
+
         Drawer_0.receiveShadows=true;
         Drawer_0.freezeWorldMatrix();
         //Drawer_0.showBoundingBox=true;
         Drawer_0.setPivotPoint(new BABYLON.Vector3(0,0,0));
         Drawer_0.actionManager = new BABYLON.ActionManager(scene);
         Drawer_0.checkCollisions=true;
-        Drawer_0.material.backFaceCulling=false;
-        Drawer_0.actionManager.isRecursive = false;
-
-var Drawer_0_Runner= BABYLON.Mesh.MergeMeshes(
-        [
-            scene.getMeshByName("Drawer_0_Runner")
-            ], true, true, undefined, false, true);
-        Drawer_0_Runner.material = SceneMat;
-        Drawer_0_Runner.subMeshes[0].materialIndex = 2;
-        Drawer_0_Runner.name = Drawer_0_Runner.id = "Drawer_0_Runner";
+        Drawer_0.material.backFaceCulling=true;
+        Drawer_0.actionManager.isRecursive = true;
 
         Drawer_0.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
                 { trigger: BABYLON.ActionManager.OnPickDownTrigger },
                 function() {
-                    if (Drawer_0.position.z==0 & Dr_1_Status==0)
+                    if (Drawer_0.position.z==0 & Drawer_1_Status==0)
              {
                 BABYLON.Animation.CreateAndStartAnimation("Drawer_Open", Drawer_0, "position.z", 30, 30, -Drawer_Closed, Drawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-                Dr_0_Status=1;
+                Drawer_0_Status=1;
             }
-                    if (Drawer_0.position.z!==0 & Dr_1_Status==0)
+                    if (Drawer_0.position.z!==0 & Drawer_1_Status==0)
             {
                 BABYLON.Animation.CreateAndStartAnimation("Drawer_Close", Drawer_0, "position.z", 30, 30, Drawer_Opened, -Drawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-                Dr_0_Status=0;
+                Drawer_0_Status=0;
             }
                 }));
 
@@ -105,13 +139,13 @@ var Drawer_0_Runner= BABYLON.Mesh.MergeMeshes(
         [
             scene.getMeshByName("Drawer_1_primitive0"),                   //cDrawer itself
             scene.getMeshByName("Drawer_1_primitive1"),                    //cDrawer Handle
-            scene.getMeshByName("Drawer_1_Handle")                    //cDrawer Handle
+            scene.getMeshByName("Drawer_1_Handle")
             ], true, true, undefined, false, true);
         Drawer_1.material = SceneMat;
         Drawer_1.subMeshes[0].materialIndex = 1;
         Drawer_1.subMeshes[1].materialIndex = 2;
         Drawer_1.subMeshes[2].materialIndex = 5;
-       scene.getTransformNodeByName("Drawer_1").dispose();
+        scene.getTransformNodeByName("Drawer_1").dispose();
 
         Drawer_1.name = Drawer_1.id = "Drawer_1";
         Drawer_1.receiveShadows=true;
@@ -121,55 +155,30 @@ var Drawer_0_Runner= BABYLON.Mesh.MergeMeshes(
         Drawer_1.checkCollisions=true;
         Drawer_1.actionManager.isRecursive = true;
 
-var Drawer_1_Runner= BABYLON.Mesh.MergeMeshes(
-        [
-            scene.getMeshByName("Drawer_1_Runner")
-            ], true, true, undefined, false, true);
-        Drawer_1_Runner.material = SceneMat;
-        Drawer_1_Runner.subMeshes[0].materialIndex = 2;
-        Drawer_1_Runner.name = Drawer_1_Runner.id = "Drawer_1_Runner";
-
 if( ac_code.indexOf('9181') >= 0){
   Drawer_1.isVisible=true;
-  Drawer_1_Runner.isVisible=true;
-
 }
 else
 {
-  Drawer_1.isVisible=false;
-  Drawer_1_Runner.isVisible=false;
+    Drawer_1.isVisible=false;
 }
 
 
         Drawer_1.actionManager.registerAction(new BABYLON.ExecuteCodeAction(
                 { trigger: BABYLON.ActionManager.OnPickDownTrigger },
                 function() {
-                    if (Drawer_1.position.z==0 & Dr_0_Status==1)
+                    if (Drawer_1.position.z==0 & Drawer_0_Status==1)
             {
                 BABYLON.Animation.CreateAndStartAnimation("cDrawer_Open", Drawer_1, "position.z", 20, 20, -cDrawer_Closed, cDrawer_Opened, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-                Dr_1_Status=1;
+                Drawer_1_Status=1;
             }
-                    if (Drawer_1.position.z!==0 & Dr_0_Status==1)
+                    if (Drawer_1.position.z!==0 & Drawer_0_Status==1)
             {
                 BABYLON.Animation.CreateAndStartAnimation("cDrawer_Close", Drawer_1, "position.z", 20, 20, cDrawer_Opened, -cDrawer_Closed, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-                Dr_1_Status=0;
+                Drawer_1_Status=0;
             }
-
-
                 }));
 
-
-  var BT = BABYLON.Mesh.MergeMeshes(
-        [
-            scene.getMeshByName("11_BT")
-            ], true, true, undefined, false, true);        
-        BT.material = SceneMat;
-        BT.subMeshes[0].materialIndex = 0;
-        BT.name = BT.id = "BT";
-        BT.receiveShadows=true;
-        BT.freezeWorldMatrix();
-//        BT.showBoundingBox=true;
-        BT.setPivotPoint(new BABYLON.Vector3(0,0,0));
 
   
   
@@ -182,18 +191,6 @@ else
         scene.activeCamera.beta += -camera_y;       // camera +20°
         scene.activeCamera.radius += camera_z;       // camera +20°
 
-    //scene.clearColor = new BABYLON.Color3(0.99, 0.99, 0.99);
-    scene.gravity = new BABYLON.Vector3(0, -0.15, 0);
-	camera.lowerBetaLimit = 0.1;
-	camera.upperBetaLimit = (Math.PI / 2) * 0.9;
-	camera.lowerRadiusLimit = 1;
-	camera.upperRadiusLimit = 1;
-    camera.minZ = 0.01;
-    camera.ellipsoid = new BABYLON.Vector3(1, 1, 1);
-    camera.applyGravity = true;
-    scene.collisionsEnabled = true;
-    camera.checkCollisions = true;
-
     camera.attachControl(canvas, true);
     camera.lowerRadiusLimit = 10;
     camera.upperRadiusLimit = 120;
@@ -201,24 +198,31 @@ else
     camera.checkCollisions = true;
     // camera.setTarget(BABYLON.Vector3.Zero());
     camera.attachControl(canvas, true);
-    var renderer = scene.enableDepthRenderer();
 
 
 var Bas3D;
 							
 BABYLON
     .SceneLoader
-    .ImportMesh("BAS_Ella_D355_DM", "https://raw.githubusercontent.com/YDm-UA/babylon/main/StM/", "Basins_90mm.glb", scene, function(object) {
+    .ImportMesh("BAS_Ella_D355_WG", "https://raw.githubusercontent.com/YDm-UA/babylon/main/StM/", "Basins_90mm.glb", scene, function(object) {
         Bas3D = object[0];
         startBas3D();
 
     });
 
 function startBas3D(){
+//carTest.translate(new BABYLON.Vector3(-1, 1, 1), 1, BABYLON.Space.WORLD);
+//carTest.translate(new BABYLON.Vector3(scene.getTransformNodeByName("BAS_Placeholder").getPivotPoint.camera_x, 1, 1), 1, scene);
 Bas3D.position.x= ((BT.getBoundingInfo().boundingBox.maximum.y)/2-0.045);
 Bas3D.position.y= (BT.getBoundingInfo().boundingBox.maximum.y);
+
+									  
+						 
 Bas3D.position.z= (0.28);
 Bas3D.parent=BT;
+
+									
+	
 }
 
 
@@ -227,13 +231,15 @@ BABYLON
     .SceneLoader
     .ImportMesh("00_CutOut_90", "https://raw.githubusercontent.com/YDm-UA/babylon/main/StM/", "Basins_90mm.glb", scene, function(object) {
         Bas3D_CutOut = object[0];
-        Bas3D_CutOut.parent=Bas3D;
         startBas3D_CutOut();
     });
 
-/** 
-function startBas3D_CutOut(){
 
+function startBas3D_CutOut(){
+Bas3D_CutOut.position.x= ((BT.getBoundingInfo().boundingBox.maximum.y)/2-0.045);
+Bas3D_CutOut.position.y= (BT.getBoundingInfo().boundingBox.maximum.y);
+Bas3D_CutOut.position.z= (0.28);
+Bas3D_CutOut.parent=BT;
 console.log((BT.getBoundingInfo().boundingBox.maximum.y)/2);
 
     var csg_Color = new BABYLON.StandardMaterial("csg_Color",scene);
@@ -246,20 +252,20 @@ console.log((BT.getBoundingInfo().boundingBox.maximum.y)/2);
 
 
         var BT_CutOut = subCSG.toMesh("BT_CutOut", csg_Color, scene);
-        BT_CutOut.material = csg_Color;
-        //BT_CutOut.subMeshes[0].materialIndex = 0;
+        BT_CutOut.material = SceneMat;
+        BT_CutOut.subMeshes[0].materialIndex = 5;
         BT_CutOut.name = BT_CutOut.id = "BT_CutOut";
         BT_CutOut.receiveShadows=true;
         BT_CutOut.freezeWorldMatrix();
-        BT_CutOut.material.backFaceCulling=false;
+        BT_CutOut.material.backFaceCulling=true;
         //BT_CutOut.material.MergeMeshes;
         BT_CutOut.setPivotPoint(new BABYLON.Vector3(0,0,0));
         Bas3D.parent=BT_CutOut;
-        //BT.dispose();
+        BT.dispose();
 //BT=BABYLON.CSG.FromMesh(scene.getMeshByName("00_CutOut_90"),true);
 
 }
-**/
+
 
 
 
@@ -273,7 +279,33 @@ console.log(scene.getMeshByName("BAS_Trinity_WG").id);
 
 });
 **/
+
+
+    scene.onPointerPick = function (evt, pickInfo) {
+        if (pickInfo.hit) {
+            if (pickInfo.pickedMesh != null)
+            {
+                 console.log("mesh="+pickInfo.pickedMesh.name);
+	if (pickInfo.pickedMesh.name=="Drawer_0")
+		{
+                 console.log("Selection="+pickInfo.pickedMesh.name);
+                 //console.log("mat="+pickInfo.pickedMesh.materialIndex());
+                //SceneMat.subMaterials.materialIndex[3].push(MAT_HDL_Gold);
+            }
+        }
+    }             
+    }
+
+
+camera.onCollide = function(collidedMesh) {
+    if(collidedMesh.uniqueId === Drawer_0.uniqueId) {
+        //set the new camera position
+        camera.position = new BABYLON.Vector3(13,37,42);
+    }
+}
+
     });
+
 
     return scene;
 };
